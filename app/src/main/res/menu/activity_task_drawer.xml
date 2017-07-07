@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nearby_gym"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Nearby Gym" />
+        <item
+            android:id="@+id/Watch_Exercises"
+            android:icon="@drawable/ic_play_arrow_black_24dp"
+            android:title="Watch Exercise" />
+        <item
+            android:id="@+id/track_progress"
+            android:icon="@drawable/ic_trending_up_black_24dp"
+            android:title="Track Progress" />
+        <item
+            android:id="@+id/get_macros"
+            android:icon="@drawable/eat"
+            android:title="Get Macros" />
+    </group>
+
+    <item android:title="Log Out"
+        android:id="@+id/log_out">
+
+    </item>
+
+</menu>
