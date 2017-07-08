@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -92,6 +93,17 @@ private FirebaseAuth.AuthStateListener authStateListener;
           }
             }
         };
+        ((Button)findViewById(R.id.continue_)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,TaskActivity.class);
+//                intent.putExtra("name",firebaseAuth.getCurrentUser().getDisplayName());
+  //              intent.putExtra("email",firebaseAuth.getCurrentUser().getEmail());
+    //            intent.putExtra("photo",firebaseAuth.getCurrentUser().getPhotoUrl());
+                startActivity(intent);
+
+            }
+        });
 
         signInButton=(SignInButton) findViewById(R.id.google_sign_in_button);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

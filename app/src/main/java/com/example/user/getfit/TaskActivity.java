@@ -19,17 +19,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.squareup.picasso.Picasso;
 
-public class TaskActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class TaskActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener ,ProgressFragment.getTonext{
 private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
+ PlaceAutocompleteFragment autocompleteFragment;
+    android.app.FragmentTransaction transaction;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+         transaction=getFragmentManager().beginTransaction();
+         autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.autocomplete);
+        transaction.hide(autocompleteFragment);
+        transaction.commit();
+
+
         Bundle bundle=getIntent().getExtras();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,10 +58,12 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
         ImageView imageView=(ImageView) view.findViewById(R.id.photo);
 
         //Layout layout=(Layout) findViewById(R.layout.nav_header_task);
-        Picasso.with(this).load(bundle.getString("photo")).into(imageView);
-        Log.e("KU",bundle.getString("name"));
-       TextView textView=(TextView) view.findViewById(R.id.email);
-        textView.setText(bundle.getString("email"));
+        if(bundle!=null) {
+            Picasso.with(this).load(bundle.getString("photo")).into(imageView);
+            Log.e("KU", bundle.getString("name"));
+            TextView textView = (TextView) view.findViewById(R.id.email);
+            textView.setText(bundle.getString("email"));
+        }
 
     }
 
@@ -95,6 +107,11 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
         int id = item.getItemId();
 
         if (id == R.id.Watch_Exercises) {
+ ExrecisePartFragment fragment=new ExrecisePartFragment();
+           FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container,fragment);
+            transaction.commit();
+
             // Handle the camera action
         } else if (id == R.id.get_macros) {
 
@@ -105,6 +122,13 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
             transaction.commit();
         }
  else if (id == R.id.track_progress) {
+            android.app.FragmentTransaction mtra=getFragmentManager().beginTransaction();
+            mtra.hide(autocompleteFragment);
+            mtra.commit();
+            ProgressFragment fragment=new ProgressFragment();
+            FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container,fragment);
+            transaction.commit();
 
         }
 
@@ -113,4 +137,16 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
         return true;
     }
 
+
+    @Override
+    public void YourCalorie(String calorie) {
+        ProgressDetailsFragment fragment=new ProgressDetailsFragment();
+        FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+        Bundle bundle=new Bundle();
+        bundle.putString("goal",calorie);
+        fragment.setArguments(bundle);
+        transaction.replace(R.id.container,fragment);
+        transaction.commit();
+
+    }
 }

@@ -26,7 +26,7 @@
         android:text="@string/app_name"
         android:gravity="center"
         android:textSize="80dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textStyle="bold"/>
     <com.google.android.gms.common.SignInButton
         android:layout_width="200dp"
@@ -60,6 +60,7 @@
             android:layout_height="45dp"
             android:background="@color/colorPrimary"
             android:text="Continue"
+            android:id="@+id/continue_"
             android:textColor="#FFF"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"/>

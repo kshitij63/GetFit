@@ -7,10 +7,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +29,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -54,6 +62,7 @@ import java.util.ArrayList;
 public class GymFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private ProgressDialog progressDialog;
     private MapView mapFragment;
+    private FloatingActionButton actionButton;
     private ArrayList<Gym> gymArrayList;
     private RecyclerView recyclerView;
     private LinearLayoutManager manager;
@@ -67,6 +76,7 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.gymfragment, container, false);
         setupGoogleApiClient();
+        actionButton=(FloatingActionButton) view.findViewById(R.id.fab_Search);
         recyclerView=(RecyclerView) view.findViewById(R.id.gymRecycle);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setIndeterminate(true);
@@ -100,6 +110,32 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
 
 
 
+            }
+        });
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                        getActivity().getFragmentManager().findFragmentById(R.id.autocomplete);
+                android.app.FragmentTransaction transaction=getActivity().getFragmentManager().beginTransaction();
+                transaction.show(autocompleteFragment);
+                transaction.commit();
+                autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                    @Override
+                    public void onPlaceSelected(Place place) {
+                        mgoogleMap.clear();
+                        get_nearby_gyms(place.getLatLng(),mgoogleMap);
+                        mgoogleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName().toString()));
+
+                        mgoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 12.0f));
+
+                    }
+
+                    @Override
+                    public void onError(Status status) {
+
+                    }
+                });
             }
         });
 
