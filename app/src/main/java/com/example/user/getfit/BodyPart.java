@@ -7,7 +7,10 @@ package com.example.user.getfit;
 public class BodyPart {
     String body_part_name;
     Integer image;
-
+    String image2;
+BodyPart(String image2){
+    this.image2=image2;
+}
     BodyPart(String body_part_name,Integer image){
         this.body_part_name=body_part_name;
         this.image=image;
@@ -20,5 +23,9 @@ public class BodyPart {
 
     public String getBody_part_name() {
         return body_part_name;
+    }
+
+    public String getImage2() {
+        return image2;
     }
 }

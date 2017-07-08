@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.squareup.picasso.Picasso;
 
-public class TaskActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener ,ProgressFragment.getTonext{
+public class TaskActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener ,ProgressFragment.getTonext,ExrecisePartFragment.GetNameListener{
 private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
  PlaceAutocompleteFragment autocompleteFragment;
     android.app.FragmentTransaction transaction;
@@ -147,6 +147,11 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
         fragment.setArguments(bundle);
         transaction.replace(R.id.container,fragment);
         transaction.commit();
+
+    }
+
+    @Override
+    public void getName(String name) {
 
     }
 }

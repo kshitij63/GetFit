@@ -5,12 +5,10 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <GridView
-        android:numColumns="auto_fit"
-        android:columnWidth="100dp"
+    <ListView
         android:id="@+id/grid"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></GridView>
+        android:layout_height="match_parent"></ListView>
 </LinearLayout>
 
 
