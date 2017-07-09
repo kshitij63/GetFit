@@ -1,6 +1,7 @@
 package com.example.user.getfit;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -30,10 +31,12 @@ public class TaskActivity extends AppCompatActivity implements NavigationView.On
 private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
  PlaceAutocompleteFragment autocompleteFragment;
     android.app.FragmentTransaction transaction;
+    SharedPreferences preferences;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+        preferences=getSharedPreferences("NotSET",MODE_PRIVATE);
          transaction=getFragmentManager().beginTransaction();
          autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.autocomplete);
@@ -123,15 +126,20 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
             transaction.commit();
         }
  else if (id == R.id.track_progress) {
-            //android.app.FragmentTransaction mtra=getFragmentManager().beginTransaction();
-            //mtra.hide(autocompleteFragment);
-            //mtra.commit();
-            //ProgressFragment fragment=new ProgressFragment();
-            ///FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
-            //transaction.replace(R.id.container,fragment);
-            //transaction.commit();
-            Intent intent=new Intent(TaskActivity.this,TestActivity.class);
-            startActivity(intent);
+            if(preferences.getInt("goal",0)==0) {
+                android.app.FragmentTransaction mtra = getFragmentManager().beginTransaction();
+                mtra.hide(autocompleteFragment);
+                mtra.commit();
+                ProgressFragment fragment = new ProgressFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, fragment);
+                transaction.commit();
+            }
+            else {
+                Intent intent=new Intent(TaskActivity.this,TestActivity.class);
+                startActivity(intent);
+            }
+
 
         }
 
@@ -143,13 +151,16 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
 
     @Override
     public void YourCalorie(String calorie) {
-        ProgressDetailsFragment fragment=new ProgressDetailsFragment();
-        FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
-        Bundle bundle=new Bundle();
-        bundle.putString("goal",calorie);
-        fragment.setArguments(bundle);
-        transaction.replace(R.id.container,fragment);
-        transaction.commit();
+        //ProgressDetailsFragment fragment=new ProgressDetailsFragment();
+        //FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+        //Bundle bundle=new Bundle();
+        //bundle.putString("goal",calorie);
+        //fragment.setArguments(bundle);
+        //transaction.replace(R.id.container,fragment);
+        //transaction.commit();
+        Intent intent=new Intent(TaskActivity.this,TestActivity.class);
+        intent.putExtra("goal",calorie);
+        startActivity(intent);
 
     }
 

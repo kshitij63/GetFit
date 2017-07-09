@@ -3,16 +3,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/grad_prog"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+
     tools:context="com.example.user.getfit.TestActivity">
+    <com.github.lzyzsd.circleprogress.ArcProgress
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:id="@+id/custom_progress"
+        android:layout_marginTop="16dp"
+        custom:arc_unfinished_color="@color/colorPrimary"
+
+        custom:arc_finished_color="#D50000"
+        custom:arc_stroke_width="15dp"
+        custom:arc_text_color="#D50000"
+        custom:arc_bottom_text="PROGRESS"
+        custom:arc_text_size="80dp"
+        custom:arc_bottom_text_size="30sp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="yeaaaaaaaah"
-        android:id="@+id/stepssss"/>
-    <Button
-        android:layout_width="wrap_content"
+        android:text="GOAL:"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:textSize="30dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1000"
+            android:id="@+id/goal"
+            android:textStyle="bold"
+            android:textColor="#D50000"
+            android:textSize="30dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fit_but"/>
+        android:layout_marginLeft="40dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEFT:"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="30dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1000"
+            android:id="@+id/left"
+            android:textStyle="bold"
+            android:textColor="#43A047"
+            android:textSize="30dp"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>
