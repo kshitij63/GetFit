@@ -59,6 +59,10 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.progressdetailfragment, container, false);
+        if (savedInstanceState != null) {
+            authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
+        }
+
         client = new GoogleApiClient.Builder(getContext()).
                 addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addApi(Fitness.SENSORS_API)
@@ -131,7 +135,7 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
         Toast.makeText(getContext(),"connected faied",Toast.LENGTH_SHORT).show();
         if( !authInProgress ) {
             try {
-                authInProgress = true;
+                authInProgress = false;
                 connectionResult.startResolutionForResult( getActivity(), REQUEST_OAUTH );
             } catch(IntentSender.SendIntentException e ) {
 
@@ -153,7 +157,7 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
         Log.e( "GoogleFit", "activity" );
 
         if( requestCode == REQUEST_OAUTH ) {
-            authInProgress = false;
+            authInProgress = true;
             if( resultCode == RESULT_OK ) {
                 if( !client.isConnecting() && !client.isConnected() ) {
                     client.connect();

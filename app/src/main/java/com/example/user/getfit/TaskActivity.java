@@ -1,5 +1,6 @@
 package com.example.user.getfit;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -122,13 +123,15 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
             transaction.commit();
         }
  else if (id == R.id.track_progress) {
-            android.app.FragmentTransaction mtra=getFragmentManager().beginTransaction();
-            mtra.hide(autocompleteFragment);
-            mtra.commit();
-            ProgressFragment fragment=new ProgressFragment();
-            FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.container,fragment);
-            transaction.commit();
+            //android.app.FragmentTransaction mtra=getFragmentManager().beginTransaction();
+            //mtra.hide(autocompleteFragment);
+            //mtra.commit();
+            //ProgressFragment fragment=new ProgressFragment();
+            ///FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+            //transaction.replace(R.id.container,fragment);
+            //transaction.commit();
+            Intent intent=new Intent(TaskActivity.this,TestActivity.class);
+            startActivity(intent);
 
         }
 
