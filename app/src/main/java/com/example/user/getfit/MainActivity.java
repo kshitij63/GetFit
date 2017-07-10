@@ -55,6 +55,7 @@ private FirebaseAuth.AuthStateListener authStateListener;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         setInitialUISetup();
         dialog=new ProgressDialog(this);
         dialog.setTitle("Logging In....");
@@ -110,7 +111,8 @@ private FirebaseAuth.AuthStateListener authStateListener;
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        mGoogleApiClient=new GoogleApiClient.Builder(this).enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+        mGoogleApiClient=new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
             @Override
             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 Toast.makeText(MainActivity.this,"Failed",Toast.LENGTH_LONG).show();

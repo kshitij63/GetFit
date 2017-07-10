@@ -1,5 +1,6 @@
 package com.example.user.getfit;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -174,7 +175,10 @@ TestStepHelper helper;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Intent intent =new Intent(this,ActiveApiClientService.class);
+        startService(intent);
         dialog.show();
+        TenPMNotify();
 
         Toast.makeText(this, "connected", Toast.LENGTH_SHORT).show();
 
@@ -216,21 +220,21 @@ TestStepHelper helper;
                 .setResultCallback(mSubscribeResultCallback);
         ViewWeekStepCountTask task=new ViewWeekStepCountTask();
         task.execute();
-        if(!initialized){
+        {
             FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
             Job job = dispatcher.newJobBuilder()
                     .setService(NotificationJobService.class)
                     .setTag("Notify_Job")
-                    .setTrigger(Trigger.executionWindow(30,35))
+                    .setTrigger(Trigger.executionWindow(15*60,15*60+30))
                     .setLifetime(Lifetime.FOREVER)
-                    .setRecurring(true)
+                    .setRecurring(false)
                     .setReplaceCurrent(true)
                     .build();
 
             int result = dispatcher.schedule(job);
             if(result==FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS){
                 Log.e("success","sucess");
-                initialized=true;
+
             }
 
         }
@@ -424,6 +428,18 @@ else {
     protected void onPause() {
         super.onPause();
         total=0;
+    }
+    private void TenPMNotify(){
+        AlarmManager manager=(AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Intent intent=new Intent(this,TestActivity.class);
+        Date date=new Date();
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY,22);
+        PendingIntent intent1=PendingIntent.getBroadcast(this,(int)System.currentTimeMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,intent1);
+
     }
 
 }

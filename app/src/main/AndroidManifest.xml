@@ -36,6 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".ActiveApiClientService"></service>
         <activity
             android:name=".TaskActivity"
             android:label="@string/title_activity_task"

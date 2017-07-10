@@ -2,20 +2,14 @@ package com.example.user.getfit;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.job.JobParameters;
-import android.app.job.JobService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
@@ -26,35 +20,44 @@ import com.google.android.gms.fitness.result.DailyTotalResult;
 import java.text.DateFormat;
 import java.util.concurrent.TimeUnit;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 /**
  * Created by user on 7/10/2017.
  */
 
-public class NotificationJobService extends com.firebase.jobdispatcher.JobService {
-
-    GoogleApiClient client;
+public class AlarmReceiver extends BroadcastReceiver {
+Context context;
+int total;
     SharedPreferences preferences;
-    int total;
     @Override
-    public boolean onStartJob(com.firebase.jobdispatcher.JobParameters job) {
-        //TestActivity.client;
-        Log.e("Jobdispatehr","claled");
-        preferences=getSharedPreferences("NotSET",0);
+    public void onReceive(Context context, Intent intent) {
+        this.context=context;
+        preferences=context.getSharedPreferences("NotSET",0);
+
         if(ActiveApiClientService.client.isConnected()){
             Log.e("Jobdispatch","Connected");
 
             ViewWeekStepCountTask viewWeekStepCountTask=new ViewWeekStepCountTask();
             viewWeekStepCountTask.execute();
         }
-        return true;
+    }
+    private void makeNotification(String goal) {
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(context);
+
+        builder.setContentTitle("Goal Completed");
+        builder.setContentText(goal);
+        builder.setSmallIcon(R.drawable.dum);
+
+        Intent notificationIntent=new Intent(context,TestActivity.class);
+        notificationIntent.putExtra("intent","fromintent");
+        PendingIntent pendingIntent=PendingIntent.getActivity(context, (int) System.currentTimeMillis(),notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        NotificationManager manager =(NotificationManager)context. getSystemService(NOTIFICATION_SERVICE);
+
+        manager.notify(001,builder.build());
 
     }
-
-    @Override
-    public boolean onStopJob(com.firebase.jobdispatcher.JobParameters job) {
-return false;
-    }
-
 
     private class ViewWeekStepCountTask extends AsyncTask<Void, Void, Void> {
 
@@ -76,26 +79,11 @@ return false;
                 makeNotification("Congratulations!!.You have successfully completed today's goal of burning " +preferences.getInt("goal",0)
                         +".Keep up the good work see your tomorrow");
             }
+            else {
+                makeNotification("Sorry!!.You did not completed your goal");
 
-
-
+            }
         }
-    }
-    private void makeNotification(String goal) {
-        NotificationCompat.Builder builder=new NotificationCompat.Builder(this);
-
-        builder.setContentTitle("Goal Completed");
-        builder.setContentText(goal);
-        builder.setSmallIcon(R.drawable.dum);
-
-        Intent notificationIntent=new Intent(this,TestActivity.class);
-        notificationIntent.putExtra("intent","fromintent");
-        PendingIntent pendingIntent=PendingIntent.getActivity(this, (int) System.currentTimeMillis(),notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        NotificationManager manager =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        manager.notify(001,builder.build());
-
     }
     private void showDataSet(DataSet dataSet) {
         Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
