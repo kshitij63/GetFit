@@ -16,9 +16,10 @@
         android:theme="@style/AppTheme">
         <service android:name=".NotificationJobService">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -36,14 +37,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".ActiveApiClientService"></service>
+
+        <service android:name=".ActiveApiClientService" />
+
         <activity
             android:name=".TaskActivity"
             android:label="@string/title_activity_task"
             android:theme="@style/AppTheme" />
-        <receiver android:name=".AlarmReceiver"></receiver>
+
+        <receiver android:name=".AlarmReceiver" />
+
         <activity android:name=".ExerciseDetailActivity" />
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestActivity" />
+
+        <receiver android:name=".CalorieWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/calorie_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

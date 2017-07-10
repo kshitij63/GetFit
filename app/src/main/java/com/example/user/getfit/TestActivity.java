@@ -421,6 +421,8 @@ else {
 
 
         }
+        editor.putInt("total",total);
+        editor.apply();
 
     }
 

@@ -34,6 +34,7 @@ public class NotificationJobService extends com.firebase.jobdispatcher.JobServic
 
     GoogleApiClient client;
     SharedPreferences preferences;
+    SharedPreferences.Editor edit;
     int total;
     @Override
     public boolean onStartJob(com.firebase.jobdispatcher.JobParameters job) {
@@ -111,11 +112,13 @@ return false;
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
                 total= (int) (total+Float.valueOf(dp.getValue(field).toString()));
+
             }
 
 
         }
-
+        edit.putInt("total",total);
+        edit.commit();
     }
 
 }
