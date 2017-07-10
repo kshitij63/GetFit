@@ -41,6 +41,7 @@
             android:name=".TaskActivity"
             android:label="@string/title_activity_task"
             android:theme="@style/AppTheme" />
+        <receiver android:name=".AlarmReceiver"></receiver>
         <activity android:name=".ExerciseDetailActivity" />
         <activity android:name=".TestActivity"></activity>
     </application>
