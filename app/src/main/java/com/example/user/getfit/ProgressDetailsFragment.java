@@ -49,6 +49,7 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 public class ProgressDetailsFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,OnDataPointListener {
     private ArcProgress progress;
+    private boolean initialized;
     //private static final int GOAL_CALORIES=3000;
     GoogleApiClient client;
     private static final int REQUEST_OAUTH = 1;

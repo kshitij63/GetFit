@@ -1,7 +1,10 @@
 package com.example.user.getfit;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -10,16 +13,24 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
@@ -62,7 +73,8 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
     ProgressDialog dialog;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
-    GoogleApiClient client;
+    private boolean initialized;
+    public static   GoogleApiClient client;
     TextView goal,left;
     int total,Goal;
     ArcProgress progress;
@@ -88,12 +100,12 @@ TestStepHelper helper;
 
         progress = (ArcProgress) findViewById(R.id.custom_progress);
         //Toast.makeText(this, getIntent().getExtras().getString("goal"), Toast.LENGTH_SHORT).show();
-        if(preferences.getInt("goal",0)==0) {
+        //if(preferences.getInt("goal",0)==0) {  **remove this **
             Goal = Integer.valueOf(getIntent().getExtras().getString("goal"));
             editor.putInt("goal",Goal);
             editor.apply();
 
-        }
+       /// }
         goal=(TextView) findViewById(R.id.goal);
         left=(TextView) findViewById(R.id.left);
         goal.setText(String.valueOf(preferences.getInt("goal",0)));
@@ -163,6 +175,7 @@ TestStepHelper helper;
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         dialog.show();
+
         Toast.makeText(this, "connected", Toast.LENGTH_SHORT).show();
 
         //SensorRequest request=new SensorRequest.Builder().setDataType(DataType.TYPE_STEP_COUNT_DELTA).setSamplingRate(1, java.util.concurrent.TimeUnit.SECONDS).build();
@@ -203,6 +216,26 @@ TestStepHelper helper;
                 .setResultCallback(mSubscribeResultCallback);
         ViewWeekStepCountTask task=new ViewWeekStepCountTask();
         task.execute();
+        if(!initialized){
+            FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+            Job job = dispatcher.newJobBuilder()
+                    .setService(NotificationJobService.class)
+                    .setTag("Notify_Job")
+                    .setTrigger(Trigger.executionWindow(30,35))
+                    .setLifetime(Lifetime.FOREVER)
+                    .setRecurring(true)
+                    .setReplaceCurrent(true)
+                    .build();
+
+            int result = dispatcher.schedule(job);
+            if(result==FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS){
+                Log.e("success","sucess");
+                initialized=true;
+            }
+
+        }
+        //Intent intent=new Intent(this,NotificationService.class);
+        //startService(intent);
     }
 
     @Override
@@ -345,17 +378,26 @@ TestStepHelper helper;
             dialog.hide();
             Toast.makeText(TestActivity.this,total+"total",Toast.LENGTH_SHORT).show();
 
-
-                //Toast.makeText(TestActivity.this,"progress" +((total / Goal) * 100),Toast.LENGTH_SHORT).show();
-                int p=((total*100)/preferences.getInt("goal",0));
-int mGoal=preferences.getInt("goal",0)-total;
-            left.setText(String.valueOf(mGoal));
-                progress.setProgress(p);
-
+if(preferences.getInt("goal",0)<=total){
+    left.setText("0");
+    progress.setBottomText("COMPLETED");
+    progress.setProgress(100);
+    //makeNotification("Congratulations!!.You have successfully completed today's goal of burning " +preferences.getInt("goal",0)
+    //+".Keep up the good work see your tomorrow");
+}
+else {
+    //Toast.makeText(TestActivity.this,"progress" +((total / Goal) * 100),Toast.LENGTH_SHORT).show();
+    int p = ((total * 100) / preferences.getInt("goal", 0));
+    int mGoal = preferences.getInt("goal", 0) - total;
+    left.setText(String.valueOf(mGoal));
+    progress.setProgress(p);
+}
 
 
         }
     }
+
+
 
     private void showDataSet(DataSet dataSet) {
         Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());

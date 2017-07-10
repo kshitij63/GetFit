@@ -36,6 +36,7 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
         preferences=getSharedPreferences("NotSET",MODE_PRIVATE);
          transaction=getFragmentManager().beginTransaction();
          autocompleteFragment = (PlaceAutocompleteFragment)
@@ -126,7 +127,7 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
             transaction.commit();
         }
  else if (id == R.id.track_progress) {
-            if(preferences.getInt("goal",0)==0) {
+            //(preferences.getInt("goal",0)==0) {
                 android.app.FragmentTransaction mtra = getFragmentManager().beginTransaction();
                 mtra.hide(autocompleteFragment);
                 mtra.commit();
@@ -134,11 +135,11 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container, fragment);
                 transaction.commit();
-            }
-            else {
-                Intent intent=new Intent(TaskActivity.this,TestActivity.class);
-                startActivity(intent);
-            }
+            //}
+            //else {
+              //  Intent intent=new Intent(TaskActivity.this,TestActivity.class);
+               // startActivity(intent);
+            //}
 
 
         }
