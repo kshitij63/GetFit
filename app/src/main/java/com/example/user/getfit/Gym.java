@@ -11,12 +11,12 @@ public class Gym {
     private String vicinity;
     private Boolean status;
 
-    Gym(String phot_ref,String rating,String name,String vicinity,Boolean status){
-        this.phot_ref=phot_ref;
-        this.name=name;
-        this.rating=rating;
-        this.vicinity=vicinity;
-        this.status=status;
+    Gym(String phot_ref, String rating, String name, String vicinity, Boolean status) {
+        this.phot_ref = phot_ref;
+        this.name = name;
+        this.rating = rating;
+        this.vicinity = vicinity;
+        this.status = status;
     }
 
     public String getName() {

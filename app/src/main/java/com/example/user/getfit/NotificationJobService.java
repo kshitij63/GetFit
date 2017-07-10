@@ -36,15 +36,16 @@ public class NotificationJobService extends com.firebase.jobdispatcher.JobServic
     SharedPreferences preferences;
     SharedPreferences.Editor edit;
     int total;
+
     @Override
     public boolean onStartJob(com.firebase.jobdispatcher.JobParameters job) {
         //TestActivity.client;
-        Log.e("Jobdispatehr","claled");
-        preferences=getSharedPreferences("NotSET",0);
-        if(ActiveApiClientService.client.isConnected()){
-            Log.e("Jobdispatch","Connected");
+        Log.e("Jobdispatehr", "claled");
+        preferences = getSharedPreferences("NotSET", 0);
+        if (ActiveApiClientService.client.isConnected()) {
+            Log.e("Jobdispatch", "Connected");
 
-            ViewWeekStepCountTask viewWeekStepCountTask=new ViewWeekStepCountTask();
+            ViewWeekStepCountTask viewWeekStepCountTask = new ViewWeekStepCountTask();
             viewWeekStepCountTask.execute();
         }
         return true;
@@ -53,12 +54,11 @@ public class NotificationJobService extends com.firebase.jobdispatcher.JobServic
 
     @Override
     public boolean onStopJob(com.firebase.jobdispatcher.JobParameters job) {
-return false;
+        return false;
     }
 
 
     private class ViewWeekStepCountTask extends AsyncTask<Void, Void, Void> {
-
 
 
         protected Void doInBackground(Void... params) {
@@ -73,31 +73,32 @@ return false;
 
             //Toast.makeText(TestActivity.this,total+"total",Toast.LENGTH_SHORT).show();
 
-            if(preferences.getInt("goal",0)<=total){
-                makeNotification("Congratulations!!.You have successfully completed today's goal of burning " +preferences.getInt("goal",0)
-                        +".Keep up the good work see your tomorrow");
+            if (preferences.getInt("goal", 0) <= total) {
+                makeNotification(getApplicationContext().getResources().getString(R.string.congrat1) + preferences.getInt("goal", 0)
+                        +getApplicationContext().getResources().getString(R.string.congrat2));
             }
-
 
 
         }
     }
-    private void makeNotification(String goal) {
-        NotificationCompat.Builder builder=new NotificationCompat.Builder(this);
 
-        builder.setContentTitle("Goal Completed");
+    private void makeNotification(String goal) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        builder.setContentTitle(getApplicationContext().getResources().getString(R.string.com));
         builder.setContentText(goal);
         builder.setSmallIcon(R.drawable.dum);
 
-        Intent notificationIntent=new Intent(this,TestActivity.class);
-        notificationIntent.putExtra("intent","fromintent");
-        PendingIntent pendingIntent=PendingIntent.getActivity(this, (int) System.currentTimeMillis(),notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent notificationIntent = new Intent(this, TestActivity.class);
+        notificationIntent.putExtra("intent", "fromintent");
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
-        NotificationManager manager =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        manager.notify(001,builder.build());
+        manager.notify(001, builder.build());
 
     }
+
     private void showDataSet(DataSet dataSet) {
         Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
         DateFormat dateFormat = DateFormat.getDateInstance();
@@ -108,16 +109,16 @@ return false;
             Log.e("History", "\tType: " + dp.getDataType().getName());
             Log.e("History", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
             Log.e("History", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            for(Field field : dp.getDataType().getFields()) {
+            for (Field field : dp.getDataType().getFields()) {
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
-                total= (int) (total+Float.valueOf(dp.getValue(field).toString()));
+                total = (int) (total + Float.valueOf(dp.getValue(field).toString()));
 
             }
 
 
         }
-        edit.putInt("total",total);
+        edit.putInt("total", total);
         edit.commit();
     }
 

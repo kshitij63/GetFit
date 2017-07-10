@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     private ProgressDialog dialog;
     private LoginButton facebook_login;
-    private static final int RC_SIGN_IN=100;
+    private static final int RC_SIGN_IN = 100;
     private FirebaseAuth mAuth;
-private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseAuth.AuthStateListener authStateListener;
     private GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -57,11 +57,11 @@ private FirebaseAuth.AuthStateListener authStateListener;
         setContentView(R.layout.activity_main);
 
         setInitialUISetup();
-        dialog=new ProgressDialog(this);
+        dialog = new ProgressDialog(this);
         dialog.setTitle("Logging In....");
         dialog.setIndeterminate(true);
         callbackManager = CallbackManager.Factory.create();
-        facebook_login=(LoginButton) findViewById(R.id.facebook_login);
+        facebook_login = (LoginButton) findViewById(R.id.facebook_login);
         facebook_login.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -80,69 +80,71 @@ private FirebaseAuth.AuthStateListener authStateListener;
             }
         });
         mAuth = FirebaseAuth.getInstance();
-        authStateListener=new FirebaseAuth.AuthStateListener() {
+        authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-          if(firebaseAuth.getCurrentUser()!=null){
-              Toast.makeText(MainActivity.this,"Welcome "+firebaseAuth.getCurrentUser().getDisplayName(),Toast.LENGTH_SHORT).show();
-              Intent intent=new Intent(MainActivity.this,TaskActivity.class);
-              intent.putExtra("name",firebaseAuth.getCurrentUser().getDisplayName());
-              intent.putExtra("email",firebaseAuth.getCurrentUser().getEmail());
-              intent.putExtra("photo",firebaseAuth.getCurrentUser().getPhotoUrl());
-              startActivity(intent);
-              finish();
-          }
+                if (firebaseAuth.getCurrentUser() != null) {
+                    Toast.makeText(MainActivity.this, "Welcome " + firebaseAuth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, TaskActivity.class);
+                    intent.putExtra("name", firebaseAuth.getCurrentUser().getDisplayName());
+                    intent.putExtra("email", firebaseAuth.getCurrentUser().getEmail());
+                    intent.putExtra("photo", firebaseAuth.getCurrentUser().getPhotoUrl());
+                    startActivity(intent);
+                    finish();
+                }
             }
         };
-        ((Button)findViewById(R.id.continue_)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.continue_)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,TaskActivity.class);
+                Intent intent = new Intent(MainActivity.this, TaskActivity.class);
 //                intent.putExtra("name",firebaseAuth.getCurrentUser().getDisplayName());
-  //              intent.putExtra("email",firebaseAuth.getCurrentUser().getEmail());
-    //            intent.putExtra("photo",firebaseAuth.getCurrentUser().getPhotoUrl());
+                //              intent.putExtra("email",firebaseAuth.getCurrentUser().getEmail());
+                //            intent.putExtra("photo",firebaseAuth.getCurrentUser().getPhotoUrl());
                 startActivity(intent);
 
             }
         });
 
-        signInButton=(SignInButton) findViewById(R.id.google_sign_in_button);
+        signInButton = (SignInButton) findViewById(R.id.google_sign_in_button);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        mGoogleApiClient=new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-            @Override
-            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-Toast.makeText(MainActivity.this,"Failed",Toast.LENGTH_LONG).show();
-            }
-        }).addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                    }
+                }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-      //          Toast.makeText(MainActivity.this,"result3",Toast.LENGTH_LONG).show();
+                //          Toast.makeText(MainActivity.this,"result3",Toast.LENGTH_LONG).show();
 
                 signIn();
             }
         });
 
     }
+
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode,resultCode,data);
-dialog.show();
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        dialog.show();
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-               // Toast.makeText(MainActivity.this,"result",Toast.LENGTH_LONG).show();
+                // Toast.makeText(MainActivity.this,"result",Toast.LENGTH_LONG).show();
                 dialog.show();
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
@@ -154,6 +156,7 @@ dialog.show();
             }
         }
     }
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         //Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -163,14 +166,14 @@ dialog.show();
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                      dialog.hide();
+                            dialog.hide();
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                      //      Toast.makeText(MainActivity.this,"welcome" +user.getDisplayName(),Toast.LENGTH_SHORT).show();
-                  //          Intent intent=new Intent(MainActivity.this,TaskActivity.class);
-                    //        startActivity(intent);
+                            //      Toast.makeText(MainActivity.this,"welcome" +user.getDisplayName(),Toast.LENGTH_SHORT).show();
+                            //          Intent intent=new Intent(MainActivity.this,TaskActivity.class);
+                            //        startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             //Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -185,8 +188,8 @@ dialog.show();
     }
 
 
-    private void setInitialUISetup(){
-        final ImageView imageView=(ImageView) findViewById(R.id.back);
+    private void setInitialUISetup() {
+        final ImageView imageView = (ImageView) findViewById(R.id.back);
         imageView.post(new Runnable() {
             @Override
             public void run() {
@@ -196,13 +199,14 @@ dialog.show();
 
             }
         });
-        TextView tx = (TextView)findViewById(R.id.appname);
+        TextView tx = (TextView) findViewById(R.id.appname);
 
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "rainbowFont.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "rainbowFont.ttf");
 
         tx.setTypeface(custom_font);
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -211,6 +215,7 @@ dialog.show();
 //        updateUI(currentUser);
         mAuth.addAuthStateListener(authStateListener);
     }
+
     private void handleFacebookAccessToken(AccessToken token) {
         //Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -224,13 +229,13 @@ dialog.show();
                             //Log.d(TAG, "signInWithCredential:success");
                             dialog.hide();
                             FirebaseUser user = mAuth.getCurrentUser();
-                        //    Toast.makeText(MainActivity.this,"Facebook" +user.getDisplayName(),Toast.LENGTH_SHORT).show();
-              //              Intent intent=new Intent(MainActivity.this,TaskActivity.class);
-                //            startActivity(intent);
+                            //    Toast.makeText(MainActivity.this,"Facebook" +user.getDisplayName(),Toast.LENGTH_SHORT).show();
+                            //              Intent intent=new Intent(MainActivity.this,TaskActivity.class);
+                            //            startActivity(intent);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-       //                     Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            //                     Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);

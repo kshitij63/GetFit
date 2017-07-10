@@ -14,12 +14,12 @@ public class CalorieWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        preferences=context.getSharedPreferences("NotSET",0);
+        preferences = context.getSharedPreferences("NotSET", 0);
 
-        CharSequence widgetText =String.valueOf(preferences.getInt("total",0)) ;
+        CharSequence widgetText = String.valueOf(preferences.getInt("total", 0));
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.calorie_widget);
-        views.setTextViewText(R.id.appwidget_text, "YOU BURNT "+widgetText +"CALORIES");
+        views.setTextViewText(R.id.appwidget_text, "YOU BURNT " + widgetText + "CALORIES");
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

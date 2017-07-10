@@ -47,7 +47,7 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
  * Created by user on 7/7/2017.
  */
 
-public class ProgressDetailsFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,OnDataPointListener {
+public class ProgressDetailsFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, OnDataPointListener {
     private ArcProgress progress;
     private boolean initialized;
     //private static final int GOAL_CALORIES=3000;
@@ -109,40 +109,38 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
 
                         }
                     }
-                }catch (Exception e){
-                    Log.e("error",e.getMessage());
+                } catch (Exception e) {
+                    Log.e("error", e.getMessage());
                 }
             }
-            }
+        };
 
-            ;
+        Fitness.SensorsApi.findDataSources(client, dataSourceRequest)
+                .
 
-        Fitness.SensorsApi.findDataSources(client,dataSourceRequest)
-                    .
-
-            setResultCallback(dataSourcesResultCallback);
+                        setResultCallback(dataSourcesResultCallback);
 
 
-        }
+    }
 
 
     @Override
     public void onConnectionSuspended(int i) {
-           }
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        Toast.makeText(getContext(),"connected faied",Toast.LENGTH_SHORT).show();
-        if( !authInProgress ) {
+        Toast.makeText(getContext(), "connected faied", Toast.LENGTH_SHORT).show();
+        if (!authInProgress) {
             try {
                 authInProgress = false;
-                connectionResult.startResolutionForResult( getActivity(), REQUEST_OAUTH );
-            } catch(IntentSender.SendIntentException e ) {
+                connectionResult.startResolutionForResult(getActivity(), REQUEST_OAUTH);
+            } catch (IntentSender.SendIntentException e) {
 
             }
         } else {
-            Log.e( "GoogleFit", "authInProgress" );
+            Log.e("GoogleFit", "authInProgress");
         }
 
     }
@@ -150,23 +148,23 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
     @Override
     public void onStart() {
         super.onStart();
-    client.connect();
+        client.connect();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e( "GoogleFit", "activity" );
+        Log.e("GoogleFit", "activity");
 
-        if( requestCode == REQUEST_OAUTH ) {
+        if (requestCode == REQUEST_OAUTH) {
             authInProgress = true;
-            if( resultCode == RESULT_OK ) {
-                if( !client.isConnecting() && !client.isConnected() ) {
+            if (resultCode == RESULT_OK) {
+                if (!client.isConnecting() && !client.isConnected()) {
                     client.connect();
 //Toast.makeText(getContext(),"ok",Toast.LENGTH_SHORT).show();
-                    Log.e( "GoogleFit", "hereok" );
+                    Log.e("GoogleFit", "hereok");
                 }
-            } else if( resultCode == RESULT_CANCELED ) {
-                Log.e( "GoogleFit", "RESULT_CANCELED" );
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.e("GoogleFit", "RESULT_CANCELED");
             }
         } else {
             Log.e("GoogleFit", "requestCode NOT request_oauth");
@@ -175,43 +173,42 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
 
     @Override
     public void onDataPoint(DataPoint dataPoint) {
-        Toast.makeText(getContext(),"data point",Toast.LENGTH_SHORT).show();
-        Log.e( "GoogleFit", "ondata" );
+        Toast.makeText(getContext(), "data point", Toast.LENGTH_SHORT).show();
+        Log.e("GoogleFit", "ondata");
 
-        for( final Field field : dataPoint.getDataType().getFields() ) {
-            final Value value = dataPoint.getValue( field );
-    //        runOnUiThread(new Runnable() {
-      //          @Override
-        //        public void run() {
-                    Toast.makeText(getApplicationContext(), "Field: " + field.getName() + " Value: " + value, Toast.LENGTH_SHORT).show();
-          Log.e("google","Field: " + field.getName() + " Value: " + value);
+        for (final Field field : dataPoint.getDataType().getFields()) {
+            final Value value = dataPoint.getValue(field);
+            //        runOnUiThread(new Runnable() {
+            //          @Override
+            //        public void run() {
+            Toast.makeText(getApplicationContext(), "Field: " + field.getName() + " Value: " + value, Toast.LENGTH_SHORT).show();
+            Log.e("google", "Field: " + field.getName() + " Value: " + value);
             // }
-           // });
+            // });
         }
     }
 
 
     private void registerFitnessDataListener(DataSource dataSource, DataType dataType) {
-        Toast.makeText(getContext(),"ok",Toast.LENGTH_SHORT).show();
-        Log.e( "GoogleFit", "regisme" );
+        Toast.makeText(getContext(), "ok", Toast.LENGTH_SHORT).show();
+        Log.e("GoogleFit", "regisme");
 
         SensorRequest request = new SensorRequest.Builder()
-                .setDataSource( dataSource )
-                .setDataType( dataType )
-                .setSamplingRate( 3, java.util.concurrent.TimeUnit.SECONDS )
+                .setDataSource(dataSource)
+                .setDataType(dataType)
+                .setSamplingRate(3, java.util.concurrent.TimeUnit.SECONDS)
                 .build();
 
-        Fitness.SensorsApi.add( client, request, this )
+        Fitness.SensorsApi.add(client, request, this)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        Log.e( "GoogleFit", "onResult" );
+                        Log.e("GoogleFit", "onResult");
 
                         if (status.isSuccess()) {
-                            Log.e( "GoogleFit", "SensorApi successfully added" );
-                        }
-                        else {
-                            Log.e( "GoogleFit", "SensorApi unsuccessfully added" );
+                            Log.e("GoogleFit", "SensorApi successfully added");
+                        } else {
+                            Log.e("GoogleFit", "SensorApi unsuccessfully added");
 
                         }
                     }
@@ -221,7 +218,7 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
     @Override
     public void onStop() {
         super.onStop();
-        Fitness.SensorsApi.remove( client, this )
+        Fitness.SensorsApi.remove(client, this)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {

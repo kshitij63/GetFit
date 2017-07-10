@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class ExerciseDetailActivity extends YouTubeBaseActivity{
-String name;
-   // ImageView button_play;
+public class ExerciseDetailActivity extends YouTubeBaseActivity {
+    String name;
+    // ImageView button_play;
     ProgressBar bar;
     YouTubePlayerView playerView;
     YouTubePlayer.OnInitializedListener onInitializedListener;
@@ -34,21 +34,22 @@ String name;
     ArrayList<BodyPart> parts;
     //private static final String LOAD_THUMB_YOUTUBE="http://img.youtube.com/vi/" +GDFUdMvacI0 +"/0.jpg";
     ArrayList<String> idList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_detail);
-        bar=(ProgressBar) findViewById(R.id.bar);
+        bar = (ProgressBar) findViewById(R.id.bar);
 
-        listView=(ListView) findViewById(R.id.listview);
+        listView = (ListView) findViewById(R.id.listview);
 
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             listView.setVisibility(View.GONE);
 
-        bar.setVisibility(View.VISIBLE);
-            playerView=(YouTubePlayerView) findViewById(R.id.youtube_player_view);
-            play_this=savedInstanceState.getString("play_id");
-            if(onInitializedListener==null) {
+            bar.setVisibility(View.VISIBLE);
+            playerView = (YouTubePlayerView) findViewById(R.id.youtube_player_view);
+            play_this = savedInstanceState.getString("play_id");
+            if (onInitializedListener == null) {
                 onInitializedListener = new YouTubePlayer.OnInitializedListener() {
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
@@ -66,20 +67,19 @@ String name;
                 };
             }
             playerView.setVisibility(View.VISIBLE);
-            playerView.initialize(getResources().getString(R.string.map_api_key),onInitializedListener);
+            playerView.initialize(getResources().getString(R.string.map_api_key), onInitializedListener);
 
-        }
-        else {
-            playerView=(YouTubePlayerView) findViewById(R.id.youtube_player_view);
+        } else {
+            playerView = (YouTubePlayerView) findViewById(R.id.youtube_player_view);
             playerView.setVisibility(View.GONE);
 
             listView.setVisibility(View.VISIBLE);
 
-            Bundle bundle=getIntent().getExtras();
-            parts=new ArrayList<>();
-            name=bundle.getString("name");
-            idList=getExerciseList(name);
-            Toast.makeText(this,name,Toast.LENGTH_SHORT).show();
+            Bundle bundle = getIntent().getExtras();
+            parts = new ArrayList<>();
+            name = bundle.getString("name");
+            idList = getExerciseList(name);
+            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -89,7 +89,7 @@ String name;
 //                playerView.setVisibility(View.VISIBLE);
                     //            bar.setVisibility(View.VISIBLE);
                     //     playerView.initialize(getResources().getString(R.string.map_api_key),onInitializedListener);
-                    play_this=idList.get(position);
+                    play_this = idList.get(position);
 
                 }
             });
@@ -114,47 +114,48 @@ String name;
         }
         return json;
     }
-    private ArrayList<String> getExerciseList(String name){
-    ArrayList<String> id_ex=new ArrayList<>();
+
+    private ArrayList<String> getExerciseList(String name) {
+        ArrayList<String> id_ex = new ArrayList<>();
         try {
-            JSONArray array=new JSONArray(loadJSONFromAsset());
-            for(int i=0;i<array.length();i++){
-                JSONObject object=array.getJSONObject(i);
-                String m_name=object.getString("Body part");
-                if(name.equalsIgnoreCase(m_name)){
-                    Toast.makeText(ExerciseDetailActivity.this,m_name,Toast.LENGTH_SHORT).show();
+            JSONArray array = new JSONArray(loadJSONFromAsset());
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                String m_name = object.getString("Body part");
+                if (name.equalsIgnoreCase(m_name)) {
+                    Toast.makeText(ExerciseDetailActivity.this, m_name, Toast.LENGTH_SHORT).show();
                     id_ex.add(object.getString("ex1"));
                     id_ex.add(object.getString("ex2"));
                     id_ex.add(object.getString("ex3"));
                     id_ex.add(object.getString("ex4"));
                     id_ex.add(object.getString("ex5"));
 
-              //      Toast.makeText(ExerciseDetailActivity.this,object.getString("ex1"),Toast.LENGTH_SHORT).show();
+                    //      Toast.makeText(ExerciseDetailActivity.this,object.getString("ex1"),Toast.LENGTH_SHORT).show();
                 }
 
             }
             //Toast.makeText(ExerciseDetailActivity.this,id_ex.size() +"ex",Toast.LENGTH_SHORT).show();
 
-            for(int i=0;i<id_ex.size();i++){
-                String Thumurl="http://img.youtube.com/vi/" + id_ex.get(i) +"/0.jpg";
-                BodyPart part=new BodyPart(Thumurl);
+            for (int i = 0; i < id_ex.size(); i++) {
+                String Thumurl = "http://img.youtube.com/vi/" + id_ex.get(i) + "/0.jpg";
+                BodyPart part = new BodyPart(Thumurl);
                 parts.add(part);
             }
-          //  Toast.makeText(this,parts.size() +" parts",Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(this,parts.size() +" parts",Toast.LENGTH_SHORT).show();
 
-            listView.setAdapter(new BodyPartAdapter(this,parts));
+            listView.setAdapter(new BodyPartAdapter(this, parts));
 
         } catch (JSONException e) {
-            Toast.makeText(this,e.getMessage().toString(),Toast.LENGTH_SHORT).show();
-            ;
+            Toast.makeText(this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+
         }
 
-return id_ex;
+        return id_ex;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        bundle.putString("play_id",play_this);
+        bundle.putString("play_id", play_this);
     }
 }

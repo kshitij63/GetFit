@@ -27,13 +27,14 @@ public class ProgressFragment extends Fragment {
     getTonext gettonext;
     EditText editText;
     Button button;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view=LayoutInflater.from(getContext()).inflate(R.layout.progressfragment,container,false);
-        final ImageView imageView=(ImageView) view.findViewById(R.id.prog_backdrop);
-        editText=(EditText) view.findViewById(R.id.calorie);
-        button=(Button) view.findViewById(R.id.button_2);
+        final View view = LayoutInflater.from(getContext()).inflate(R.layout.progressfragment, container, false);
+        final ImageView imageView = (ImageView) view.findViewById(R.id.prog_backdrop);
+        editText = (EditText) view.findViewById(R.id.calorie);
+        button = (Button) view.findViewById(R.id.button_2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,12 +47,11 @@ public class ProgressFragment extends Fragment {
                 Blurry.with(getContext())
                         .radius(15)
                         .sampling(2).capture(view.findViewById(R.id.prog_backdrop)).into(imageView);
-                TextView tx = (TextView)view.findViewById(R.id.track_progress);
+                TextView tx = (TextView) view.findViewById(R.id.track_progress);
 
-                Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "rainbowFont.ttf");
+                Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(), "rainbowFont.ttf");
 
                 tx.setTypeface(custom_font);
-
 
 
             }
@@ -59,7 +59,7 @@ public class ProgressFragment extends Fragment {
         return view;
     }
 
-    public  interface getTonext{
+    public interface getTonext {
         void YourCalorie(String calorie);
     }
 
@@ -68,7 +68,8 @@ public class ProgressFragment extends Fragment {
         super.onAttach(context);
         try {
             gettonext = (getTonext) getActivity();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
     }
 

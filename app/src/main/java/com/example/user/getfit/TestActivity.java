@@ -69,52 +69,53 @@ import static android.R.id.toggle;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static java.security.AccessController.getContext;
 
-public class TestActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,OnDataPointListener,GoogleApiClient.OnConnectionFailedListener {
+public class TestActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, OnDataPointListener, GoogleApiClient.OnConnectionFailedListener {
     DataReadRequest readRequest;
     ProgressDialog dialog;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private boolean initialized;
-    public static   GoogleApiClient client;
-    TextView goal,left;
-    int total,Goal;
+    public static GoogleApiClient client;
+    TextView goal, left;
+    int total, Goal;
     ArcProgress progress;
     private ResultCallback<Status> mSubscribeResultCallback;
     private ResultCallback<Status> mCancelSubscriptionResultCallback;
     private ResultCallback<ListSubscriptionsResult> mListSubscriptionsResultCallback;
     private static final int REQUEST_OAUTH = 1;
     private static final String AUTH_PENDING = "auth_state_pending";
-TestStepHelper helper;
+    TestStepHelper helper;
     SQLiteDatabase db;
     private boolean authInProgress = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        helper=new TestStepHelper(this);
-        dialog=new ProgressDialog(this);
+        helper = new TestStepHelper(this);
+        dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
-        dialog.setTitle("Updating progress..");
+        dialog.setTitle(getResources().getString(R.string.update));
         dialog.show();
-        preferences=getSharedPreferences("NotSET",MODE_PRIVATE);
-        editor=preferences.edit();
+        preferences = getSharedPreferences("NotSET", MODE_PRIVATE);
+        editor = preferences.edit();
 
         progress = (ArcProgress) findViewById(R.id.custom_progress);
         //Toast.makeText(this, getIntent().getExtras().getString("goal"), Toast.LENGTH_SHORT).show();
         //if(preferences.getInt("goal",0)==0) {  **remove this **
-            Goal = Integer.valueOf(getIntent().getExtras().getString("goal"));
-            editor.putInt("goal",Goal);
-            editor.apply();
+        Goal = Integer.valueOf(getIntent().getExtras().getString("goal"));
+        editor.putInt("goal", Goal);
+        editor.apply();
 
-       /// }
-        goal=(TextView) findViewById(R.id.goal);
-        left=(TextView) findViewById(R.id.left);
-        goal.setText(String.valueOf(preferences.getInt("goal",0)));
+        /// }
+        goal = (TextView) findViewById(R.id.goal);
+        left = (TextView) findViewById(R.id.left);
+        goal.setText(String.valueOf(preferences.getInt("goal", 0)));
 
 
         //progress.setProgress(50);
 
-        db=helper.getWritableDatabase();
+        db = helper.getWritableDatabase();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
@@ -125,7 +126,7 @@ TestStepHelper helper;
                 .addApi(Fitness.SENSORS_API)
                 .addApi(Fitness.HISTORY_API)
                 .addApi(Fitness.RECORDING_API)
-                .enableAutoManage(this,0,this)
+                .enableAutoManage(this, 0, this)
                 .addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
 
 
@@ -139,7 +140,7 @@ TestStepHelper helper;
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
                     if (status.getStatusCode() == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
-                        Log.e( "RecordingAPI", "Already subscribed to the Recording API");
+                        Log.e("RecordingAPI", "Already subscribed to the Recording API");
                     } else {
                         Log.e("RecordingAPI", "Subscribed to the Recording API");
                     }
@@ -151,7 +152,7 @@ TestStepHelper helper;
             @Override
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
-                    Log.e( "RecordingAPI", "Canceled subscriptions!");
+                    Log.e("RecordingAPI", "Canceled subscriptions!");
                 } else {
                     // Subscription not removed
                     Log.e("RecordingAPI", "Failed to cancel subscriptions");
@@ -164,9 +165,9 @@ TestStepHelper helper;
             public void onResult(@NonNull ListSubscriptionsResult listSubscriptionsResult) {
                 for (Subscription subscription : listSubscriptionsResult.getSubscriptions()) {
                     DataType dataType = subscription.getDataType();
-                    Log.e( "RecordingAPI", dataType.getName() );
-                    for (Field field : dataType.getFields() ) {
-                        Log.e( "RecordingAPI", field.toString() );
+                    Log.e("RecordingAPI", dataType.getName());
+                    for (Field field : dataType.getFields()) {
+                        Log.e("RecordingAPI", field.toString());
                     }
                 }
             }
@@ -175,12 +176,12 @@ TestStepHelper helper;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Intent intent =new Intent(this,ActiveApiClientService.class);
+        Intent intent = new Intent(this, ActiveApiClientService.class);
         startService(intent);
         dialog.show();
         TenPMNotify();
 
-        Toast.makeText(this, "connected", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "connected", Toast.LENGTH_SHORT).show();
 
         //SensorRequest request=new SensorRequest.Builder().setDataType(DataType.TYPE_STEP_COUNT_DELTA).setSamplingRate(1, java.util.concurrent.TimeUnit.SECONDS).build();
         //Toast.makeText(getContext(),"connected sus",Toast.LENGTH_SHORT).show();
@@ -194,46 +195,44 @@ TestStepHelper helper;
                 try {
                     Log.e("get", dataSourcesResult.toString());
                     for (DataSource dataSource : dataSourcesResult.getDataSources()) {
-                        Log.e("loop", "lkk");
+          //              Log.e("loop", "lkk");
                         if (DataType.TYPE_CALORIES_EXPENDED.equals(dataSource.getDataType())) {
-                            Log.e("get", "in if");
+            //                Log.e("get", "in if");
 
                             registerFitnessDataListener(dataSource, DataType.TYPE_CALORIES_EXPENDED);
                         } else {
-                            Log.e("get", "in else");
+              //              Log.e("get", "in else");
 
                         }
                     }
-                }catch (Exception e){
-                    Log.e("error",e.getMessage());
+                } catch (Exception e) {
+                    Log.e("error", e.getMessage());
                 }
             }
-        }
+        };
 
-                ;
-
-        Fitness.SensorsApi.findDataSources(client,dataSourceRequest)
+        Fitness.SensorsApi.findDataSources(client, dataSourceRequest)
                 .
 
                         setResultCallback(dataSourcesResultCallback);
         Fitness.RecordingApi.subscribe(client, DataType.TYPE_CALORIES_EXPENDED)
                 .setResultCallback(mSubscribeResultCallback);
-        ViewWeekStepCountTask task=new ViewWeekStepCountTask();
+        ViewWeekStepCountTask task = new ViewWeekStepCountTask();
         task.execute();
         {
             FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
             Job job = dispatcher.newJobBuilder()
                     .setService(NotificationJobService.class)
                     .setTag("Notify_Job")
-                    .setTrigger(Trigger.executionWindow(15*60,15*60+30))
+                    .setTrigger(Trigger.executionWindow(15 * 60, 15 * 60 + 30))
                     .setLifetime(Lifetime.FOREVER)
                     .setRecurring(false)
                     .setReplaceCurrent(true)
                     .build();
 
             int result = dispatcher.schedule(job);
-            if(result==FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS){
-                Log.e("success","sucess");
+            if (result == FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS) {
+                Log.e("success", "sucess");
 
             }
 
@@ -248,16 +247,16 @@ TestStepHelper helper;
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(getApplicationContext(),"connected faied",Toast.LENGTH_SHORT).show();
-        if( !authInProgress ) {
+        //
+        if (!authInProgress) {
             try {
                 authInProgress = false;
-                connectionResult.startResolutionForResult( TestActivity.this, REQUEST_OAUTH );
-            } catch(IntentSender.SendIntentException e ) {
+                connectionResult.startResolutionForResult(TestActivity.this, REQUEST_OAUTH);
+            } catch (IntentSender.SendIntentException e) {
 
             }
         } else {
-            Log.e( "GoogleFit", "authInProgress" );
+            Log.e("GoogleFit", "authInProgress");
         }
 
     }
@@ -270,16 +269,16 @@ TestStepHelper helper;
 
     @Override
     public void onDataPoint(DataPoint dataPoint) {
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
 
-        Toast.makeText(this,"data point",Toast.LENGTH_SHORT).show();
-        Log.e( "GoogleFit", "ondata" );
+        Toast.makeText(this, "data point", Toast.LENGTH_SHORT).show();
+        Log.e("GoogleFit", "ondata");
 
-        for( final Field field : dataPoint.getDataType().getFields() ) {
-            final Value value = dataPoint.getValue( field );
-            values.put("num_step",value.toString());
-            db.insert("step",null,values);
-            Handler handler=new Handler();
+        for (final Field field : dataPoint.getDataType().getFields()) {
+            final Value value = dataPoint.getValue(field);
+            values.put("num_step", value.toString());
+            db.insert("step", null, values);
+            Handler handler = new Handler();
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -287,59 +286,51 @@ TestStepHelper helper;
 
                 }
             });
-            //        runOnUiThread(new Runnable() {
-            //          @Override
-            //        public void run() {
 
-            Log.e("google","Field: " + field.getName() + " Value: " + value);
-            // }
-            // });
-        }
-
-
+            Log.e("google", "Field: " + field.getName() + " Value: " + value);
+          }
 
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e( "GoogleFit", "activity" );
+        Log.e("GoogleFit", "activity");
 
-        if( requestCode == REQUEST_OAUTH ) {
+        if (requestCode == REQUEST_OAUTH) {
             authInProgress = true;
-            if( resultCode == RESULT_OK ) {
-                if( !client.isConnecting() && !client.isConnected() ) {
+            if (resultCode == RESULT_OK) {
+                if (!client.isConnecting() && !client.isConnected()) {
                     client.connect();
-//Toast.makeText(getContext(),"ok",Toast.LENGTH_SHORT).show();
-                    Log.e( "GoogleFit", "hereok" );
+
                 }
-            } else if( resultCode == RESULT_CANCELED ) {
-                Log.e( "GoogleFit", "RESULT_CANCELED" );
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.e("GoogleFit", "RESULT_CANCELED");
             }
         } else {
             Log.e("GoogleFit", "requestCode NOT request_oauth");
         }
     }
+
     private void registerFitnessDataListener(DataSource dataSource, DataType dataType) {
-        Toast.makeText(this,"ok",Toast.LENGTH_SHORT).show();
-        Log.e( "GoogleFit", "regisme" );
+
 
         SensorRequest request = new SensorRequest.Builder()
-                .setDataSource( dataSource )
-                .setDataType( dataType )
-                .setSamplingRate( 3, java.util.concurrent.TimeUnit.SECONDS )
+                .setDataSource(dataSource)
+                .setDataType(dataType)
+                .setSamplingRate(3, java.util.concurrent.TimeUnit.SECONDS)
                 .build();
 
-        Fitness.SensorsApi.add( client, request, this )
+        Fitness.SensorsApi.add(client, request, this)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        Log.e( "GoogleFit", "onResult" );
+                        Log.e("GoogleFit", "onResult");
 
                         if (status.isSuccess()) {
-                            Log.e( "GoogleFit", "SensorApi successfully added" );
-                        }
-                        else {
-                            Log.e( "GoogleFit", "SensorApi unsuccessfully added" );
+                            Log.e("GoogleFit", "SensorApi successfully added");
+                        } else {
+                            Log.e("GoogleFit", "SensorApi unsuccessfully added");
 
                         }
                     }
@@ -349,8 +340,8 @@ TestStepHelper helper;
     @Override
     public void onStop() {
         super.onStop();
-    total=0;
-        Fitness.SensorsApi.remove( client, this )
+        total = 0;
+        Fitness.SensorsApi.remove(client, this)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
@@ -366,12 +357,12 @@ TestStepHelper helper;
         super.onSaveInstanceState(outState);
         outState.putBoolean(AUTH_PENDING, authInProgress);
     }
+
     private class ViewWeekStepCountTask extends AsyncTask<Void, Void, Void> {
 
 
-
         protected Void doInBackground(Void... params) {
-     //       displayLastWeeksData();
+            //       displayLastWeeksData();
             DailyTotalResult dataReadResult = Fitness.HistoryApi.readDailyTotal(client, DataType.TYPE_CALORIES_EXPENDED).await(1, TimeUnit.MINUTES);
             showDataSet(dataReadResult.getTotal());
             return null;
@@ -380,27 +371,22 @@ TestStepHelper helper;
         @Override
         protected void onPostExecute(Void aVoid) {
             dialog.hide();
-            Toast.makeText(TestActivity.this,total+"total",Toast.LENGTH_SHORT).show();
+            Toast.makeText(TestActivity.this, total + "total", Toast.LENGTH_SHORT).show();
 
-if(preferences.getInt("goal",0)<=total){
-    left.setText("0");
-    progress.setBottomText("COMPLETED");
-    progress.setProgress(100);
-    //makeNotification("Congratulations!!.You have successfully completed today's goal of burning " +preferences.getInt("goal",0)
-    //+".Keep up the good work see your tomorrow");
-}
-else {
-    //Toast.makeText(TestActivity.this,"progress" +((total / Goal) * 100),Toast.LENGTH_SHORT).show();
-    int p = ((total * 100) / preferences.getInt("goal", 0));
-    int mGoal = preferences.getInt("goal", 0) - total;
-    left.setText(String.valueOf(mGoal));
-    progress.setProgress(p);
-}
+            if (preferences.getInt("goal", 0) <= total) {
+                left.setText("0");
+                progress.setBottomText("COMPLETED");
+                progress.setProgress(100);
+            } else {
+            int p = ((total * 100) / preferences.getInt("goal", 0));
+                int mGoal = preferences.getInt("goal", 0) - total;
+                left.setText(String.valueOf(mGoal));
+                progress.setProgress(p);
+            }
 
 
         }
     }
-
 
 
     private void showDataSet(DataSet dataSet) {
@@ -413,15 +399,15 @@ else {
             Log.e("History", "\tType: " + dp.getDataType().getName());
             Log.e("History", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
             Log.e("History", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            for(Field field : dp.getDataType().getFields()) {
+            for (Field field : dp.getDataType().getFields()) {
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
-                total= (int) (total+Float.valueOf(dp.getValue(field).toString()));
+                total = (int) (total + Float.valueOf(dp.getValue(field).toString()));
             }
 
 
         }
-        editor.putInt("total",total);
+        editor.putInt("total", total);
         editor.apply();
 
     }
@@ -429,18 +415,19 @@ else {
     @Override
     protected void onPause() {
         super.onPause();
-        total=0;
+        total = 0;
     }
-    private void TenPMNotify(){
-        AlarmManager manager=(AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Intent intent=new Intent(this,TestActivity.class);
-        Date date=new Date();
-        Calendar calendar=Calendar.getInstance();
+    private void TenPMNotify() {
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Intent intent = new Intent(this, TestActivity.class);
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY,22);
-        PendingIntent intent1=PendingIntent.getBroadcast(this,(int)System.currentTimeMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,intent1);
+        calendar.set(Calendar.HOUR_OF_DAY, 22);
+        PendingIntent intent1 = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, intent1);
 
     }
 

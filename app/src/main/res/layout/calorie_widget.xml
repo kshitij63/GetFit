@@ -13,7 +13,6 @@
         android:layout_margin="8dp"
         android:background="#09C"
         android:contentDescription="@string/appwidget_text"
-        android:text="CALORIES BURNT:2000"
         android:textColor="#ffffff"
         android:textSize="24sp"
         android:textStyle="bold|italic" />

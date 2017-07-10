@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -11,61 +10,65 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/BackDropHomeScreen"
         android:src="@drawable/main_screen_backdrop"
         android:scaleType="centerCrop"
-        android:id="@+id/back"
-     />
+        android:id="@+id/back" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/appname"
-        android:text="@string/app_name"
-        android:gravity="center"
-        android:textSize="80dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold"/>
-    <com.google.android.gms.common.SignInButton
-        android:layout_width="200dp"
-        android:layout_gravity="center"
-        android:layout_height="45dp"
-        android:layout_marginTop="40dp"
-        android:id="@+id/google_sign_in_button">
-    </com.google.android.gms.common.SignInButton>
-            <com.facebook.login.widget.LoginButton
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/appname"
+            android:text="@string/app_name"
+            android:gravity="center"
+            android:textSize="80dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <com.google.android.gms.common.SignInButton
+            android:layout_width="200dp"
+            android:layout_gravity="center"
+            android:layout_height="45dp"
+            android:layout_marginTop="40dp"
+            android:id="@+id/google_sign_in_button"></com.google.android.gms.common.SignInButton>
+
+        <com.facebook.login.widget.LoginButton
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="12dp"
-                android:layout_marginTop="20dp"
-                android:paddingBottom="12dp"
+            android:layout_gravity="center"
+            android:paddingTop="12dp"
+            android:layout_marginTop="20dp"
+            android:paddingBottom="12dp"
             android:id="@+id/facebook_login"
 
             />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dont Want to Login?"
+            android:text="@string/Dont_Want_to_Login"
             android:gravity="center"
             android:textColor="#FFF"
             android:textSize="15dp"
             android:layout_marginTop="70dp"
-            android:textStyle="bold|italic"/>
+            android:textStyle="bold|italic" />
 
         <Button
             android:layout_width="200dp"
             android:layout_height="45dp"
             android:background="@color/colorPrimary"
-            android:text="Continue"
+            android:text="@string/Continue"
             android:id="@+id/continue_"
             android:textColor="#FFF"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
 
-</LinearLayout>
+    </LinearLayout>
 </FrameLayout>
 

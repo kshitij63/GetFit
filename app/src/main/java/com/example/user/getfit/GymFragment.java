@@ -68,7 +68,7 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
     private LinearLayoutManager manager;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
-    private Double current_latitude,current_longitude;
+    private Double current_latitude, current_longitude;
     private GoogleMap mgoogleMap;
 
     @Nullable
@@ -76,9 +76,9 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.gymfragment, container, false);
         setupGoogleApiClient();
-        actionButton=(FloatingActionButton) view.findViewById(R.id.fab_Search);
-        recyclerView=(RecyclerView) view.findViewById(R.id.gymRecycle);
-        progressDialog=new ProgressDialog(getContext());
+        actionButton = (FloatingActionButton) view.findViewById(R.id.fab_Search);
+        recyclerView = (RecyclerView) view.findViewById(R.id.gymRecycle);
+        progressDialog = new ProgressDialog(getContext());
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("Getting current location..");
         progressDialog.show();
@@ -94,7 +94,7 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                mgoogleMap=googleMap;
+                mgoogleMap = googleMap;
                 googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
@@ -102,12 +102,10 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
                     }
                 });
                 //if(!progressDialog.isShowing()){
-                  //  LatLng latLng=new LatLng(current_latitude,current_longitude);
-                    //googleMap.addMarker(new MarkerOptions().position(latLng).title("you"));
-                   // googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
+                //  LatLng latLng=new LatLng(current_latitude,current_longitude);
+                //googleMap.addMarker(new MarkerOptions().position(latLng).title("you"));
+                // googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
                 //}
-
-
 
 
             }
@@ -117,14 +115,14 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
             public void onClick(View v) {
                 PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                         getActivity().getFragmentManager().findFragmentById(R.id.autocomplete);
-                android.app.FragmentTransaction transaction=getActivity().getFragmentManager().beginTransaction();
+                android.app.FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.show(autocompleteFragment);
                 transaction.commit();
                 autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                     @Override
                     public void onPlaceSelected(Place place) {
                         mgoogleMap.clear();
-                        get_nearby_gyms(place.getLatLng(),mgoogleMap);
+                        get_nearby_gyms(place.getLatLng(), mgoogleMap);
                         mgoogleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName().toString()));
 
                         mgoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 12.0f));
@@ -150,7 +148,7 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-progressDialog.dismiss();
+        progressDialog.dismiss();
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(30000);
         locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
@@ -170,29 +168,29 @@ progressDialog.dismiss();
     @Override
     public void onConnectionSuspended(int i) {
         progressDialog.dismiss();
-    Toast.makeText(getContext(),"suspendede",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "suspendede", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-progressDialog.dismiss();
-        Toast.makeText(getContext(),"failed" +connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
+        progressDialog.dismiss();
+        Toast.makeText(getContext(), "failed" + connectionResult.getErrorMessage(), Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onLocationChanged(Location location) {
-progressDialog.dismiss();
-        current_latitude=location.getLatitude();
-        current_longitude=location.getLongitude();
-        LatLng latLng=new LatLng(current_latitude,current_longitude);
+        progressDialog.dismiss();
+        current_latitude = location.getLatitude();
+        current_longitude = location.getLongitude();
+        LatLng latLng = new LatLng(current_latitude, current_longitude);
         mgoogleMap.addMarker(new MarkerOptions().position(latLng).title("you"));
-         mgoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
-        get_nearby_gyms(latLng,mgoogleMap);
+        mgoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
+        get_nearby_gyms(latLng, mgoogleMap);
     }
 
-    private void setupGoogleApiClient(){
-        googleApiClient=new GoogleApiClient.Builder(getContext())
+    private void setupGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -211,75 +209,71 @@ progressDialog.dismiss();
         googleApiClient.connect();
     }
 
-    private  void get_nearby_gyms(LatLng latLng, final GoogleMap map){
-        gymArrayList=new ArrayList<>();
+    private void get_nearby_gyms(LatLng latLng, final GoogleMap map) {
+        gymArrayList = new ArrayList<>();
         //final String photo_ref = null;
-        Double latitude=latLng.latitude;
-        Double longitude= latLng.longitude;
-        String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +latitude+","+longitude +"&radius=10000&type=gym&key=" +getActivity().getResources().getString(R.string.map_api_key);
-        final RequestQueue queue= Volley.newRequestQueue(getContext());
-        final JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        Double latitude = latLng.latitude;
+        Double longitude = latLng.longitude;
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latitude + "," + longitude + "&radius=10000&type=gym&key=" + getActivity().getResources().getString(R.string.map_api_key);
+        final RequestQueue queue = Volley.newRequestQueue(getContext());
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-          String photo_ref=null;
-                String vicitnity=null;
-                String rate=null;
-                Boolean status=null;
+                String photo_ref = null;
+                String vicitnity = null;
+                String rate = null;
+                Boolean status = null;
                 try {
-                    Log.e("response",response.toString());
-                    JSONArray results=response.getJSONArray("results");
-                    for(int i=0;i<results.length();i++){
-                        JSONObject gym=results.getJSONObject(i);
-                        if(gym.has("opening_hour")){
-                            JSONObject opening=gym.getJSONObject("opening_hour");
-                             status=opening.getBoolean("open_now");
-                        }
-                        else {
-                            status=null;
-                        }
-
-                        if(gym.has("photo")){
-                            JSONArray photo=gym.getJSONArray("photo");
-                            JSONObject object=photo.getJSONObject(0);
-                             photo_ref =object.getString("photo_reference");
-                        }
-                        else {
-                            photo_ref="N/A";
-                        }
-                        String vicinity=gym.getString("vicinity");
-                        if(gym.has("rating")){
-                             rate=String.valueOf(gym.getDouble("rating"));
-                        }
-                        else {
-                            rate="N/A";
+                    Log.e("response", response.toString());
+                    JSONArray results = response.getJSONArray("results");
+                    for (int i = 0; i < results.length(); i++) {
+                        JSONObject gym = results.getJSONObject(i);
+                        if (gym.has("opening_hour")) {
+                            JSONObject opening = gym.getJSONObject("opening_hour");
+                            status = opening.getBoolean("open_now");
+                        } else {
+                            status = null;
                         }
 
-                        JSONObject geometry=gym.getJSONObject("geometry");
-                        JSONObject location=geometry.getJSONObject("location");
-                        Double gym_latitude=location.getDouble("lat");
-                        Double gym_longitude=location.getDouble("lng");
-Gym gym1=new Gym(photo_ref,rate,gym.getString("name"),vicinity,status);
+                        if (gym.has("photo")) {
+                            JSONArray photo = gym.getJSONArray("photo");
+                            JSONObject object = photo.getJSONObject(0);
+                            photo_ref = object.getString("photo_reference");
+                        } else {
+                            photo_ref = "N/A";
+                        }
+                        String vicinity = gym.getString("vicinity");
+                        if (gym.has("rating")) {
+                            rate = String.valueOf(gym.getDouble("rating"));
+                        } else {
+                            rate = "N/A";
+                        }
+
+                        JSONObject geometry = gym.getJSONObject("geometry");
+                        JSONObject location = geometry.getJSONObject("location");
+                        Double gym_latitude = location.getDouble("lat");
+                        Double gym_longitude = location.getDouble("lng");
+                        Gym gym1 = new Gym(photo_ref, rate, gym.getString("name"), vicinity, status);
                         gymArrayList.add(gym1);
-                        LatLng latLng1=new LatLng(gym_latitude,gym_longitude);
+                        LatLng latLng1 = new LatLng(gym_latitude, gym_longitude);
                         map.addMarker(new MarkerOptions().title(gym.getString("name")).position(latLng1).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                     }
-                    recyclerView.setAdapter(new GymAdapter(getContext(),gymArrayList));
+                    recyclerView.setAdapter(new GymAdapter(getContext(), gymArrayList));
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                 } catch (JSONException e) {
-                    Log.e("exe",e.getMessage());
+                    Log.e("exe", e.getMessage());
                 }
                 queue.stop();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-queue.stop();
+                queue.stop();
             }
         });
         queue.add(request);
     }
-
 
 
 }

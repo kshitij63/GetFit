@@ -22,24 +22,24 @@ import com.google.android.gms.fitness.Fitness;
  * Created by user on 7/10/2017.
  */
 
-public class ActiveApiClientService extends Service implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
-    public  static GoogleApiClient client;
-    private  boolean authInProgress;
+public class ActiveApiClientService extends Service implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+    public static GoogleApiClient client;
+    private boolean authInProgress;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     //* @param name Used to name the worker thread, important only for debugging.
+     * <p>
+     * //* @param name Used to name the worker thread, important only for debugging.
      */
     public ActiveApiClientService() {
         super();
     }
 
     @Override
-    public int onStartCommand(Intent intent,int flags, int startId) {
-       Thread thread=new Thread(new Mythread(startId));
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Thread thread = new Thread(new Mythread(startId));
         thread.start();
-    return START_STICKY;
+        return START_STICKY;
     }
 
     @Nullable
@@ -51,7 +51,7 @@ public class ActiveApiClientService extends Service implements GoogleApiClient.O
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.e("service","connected");
+        Log.e("service", "connected");
     }
 
     @Override
@@ -61,18 +61,18 @@ public class ActiveApiClientService extends Service implements GoogleApiClient.O
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.e("Fialed","failed");
-        if( !authInProgress ) {
+        Log.e("Fialed", "failed");
+        if (!authInProgress) {
             try {
                 authInProgress = false;
-                Log.e("Fialed","failed334");
+                Log.e("Fialed", "failed334");
 
-                connectionResult.startResolutionForResult( (Activity) getApplicationContext(),1);
-            } catch(IntentSender.SendIntentException e ) {
+                connectionResult.startResolutionForResult((Activity) getApplicationContext(), 1);
+            } catch (IntentSender.SendIntentException e) {
 
             }
         } else {
-            Log.e( "GoogleFit", "authInProgress" );
+            Log.e("GoogleFit", "authInProgress");
         }
 
     }
@@ -80,10 +80,10 @@ public class ActiveApiClientService extends Service implements GoogleApiClient.O
     @Override
     public void onDestroy() {
         super.onDestroy();
-    client.disconnect();
+        client.disconnect();
     }
 
-    public void createClient(){
+    public void createClient() {
         client = new GoogleApiClient.Builder(this).
                 addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addApi(Fitness.HISTORY_API)
@@ -91,19 +91,20 @@ public class ActiveApiClientService extends Service implements GoogleApiClient.O
 
     }
 
-    class Mythread extends Thread{
+    class Mythread extends Thread {
         int start_id;
 
-        Mythread(int start_id){
-            this.start_id=start_id;
+        Mythread(int start_id) {
+            this.start_id = start_id;
         }
+
         @Override
         public void run() {
             super.run();
-        if(client==null){
-            createClient();
-        }
-        client.connect();
+            if (client == null) {
+                createClient();
+            }
+            client.connect();
         }
     }
 

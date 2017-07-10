@@ -1,11 +1,14 @@
 package com.example.user.getfit;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
@@ -27,25 +30,26 @@ import android.widget.TextView;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.squareup.picasso.Picasso;
 
-public class TaskActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener ,ProgressFragment.getTonext,ExrecisePartFragment.GetNameListener{
-private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
- PlaceAutocompleteFragment autocompleteFragment;
+public class TaskActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProgressFragment.getTonext, ExrecisePartFragment.GetNameListener {
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 100;
+    PlaceAutocompleteFragment autocompleteFragment;
     android.app.FragmentTransaction transaction;
     SharedPreferences preferences;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-        preferences=getSharedPreferences("NotSET",MODE_PRIVATE);
-         transaction=getFragmentManager().beginTransaction();
-         autocompleteFragment = (PlaceAutocompleteFragment)
+        preferences = getSharedPreferences("NotSET", MODE_PRIVATE);
+        transaction = getFragmentManager().beginTransaction();
+        autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.autocomplete);
         transaction.hide(autocompleteFragment);
         transaction.commit();
 
 
-        Bundle bundle=getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -58,12 +62,12 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-     navigationView.setNavigationItemSelectedListener(this);
-        View view= navigationView.getHeaderView(0);
-        ImageView imageView=(ImageView) view.findViewById(R.id.photo);
+        navigationView.setNavigationItemSelectedListener(this);
+        View view = navigationView.getHeaderView(0);
+        ImageView imageView = (ImageView) view.findViewById(R.id.photo);
 
         //Layout layout=(Layout) findViewById(R.layout.nav_header_task);
-        if(bundle!=null) {
+        if (bundle != null) {
             Picasso.with(this).load(bundle.getString("photo")).into(imageView);
             Log.e("KU", bundle.getString("name"));
             TextView textView = (TextView) view.findViewById(R.id.email);
@@ -112,33 +116,32 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
         int id = item.getItemId();
 
         if (id == R.id.Watch_Exercises) {
- ExrecisePartFragment fragment=new ExrecisePartFragment();
-           FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.container,fragment);
+            ExrecisePartFragment fragment = new ExrecisePartFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, fragment);
             transaction.commit();
 
             // Handle the camera action
         } else if (id == R.id.get_macros) {
 
         } else if (id == R.id.nearby_gym) {
-    GymFragment fragment =new GymFragment();
-            FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.container,fragment);
-            transaction.commit();
-        }
- else if (id == R.id.track_progress) {
+
+            check_permission();
+
+
+        } else if (id == R.id.track_progress) {
             //(preferences.getInt("goal",0)==0) {
-                android.app.FragmentTransaction mtra = getFragmentManager().beginTransaction();
-                mtra.hide(autocompleteFragment);
-                mtra.commit();
-                ProgressFragment fragment = new ProgressFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, fragment);
-                transaction.commit();
+            android.app.FragmentTransaction mtra = getFragmentManager().beginTransaction();
+            mtra.hide(autocompleteFragment);
+            mtra.commit();
+            ProgressFragment fragment = new ProgressFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, fragment);
+            transaction.commit();
             //}
             //else {
-              //  Intent intent=new Intent(TaskActivity.this,TestActivity.class);
-               // startActivity(intent);
+            //  Intent intent=new Intent(TaskActivity.this,TestActivity.class);
+            // startActivity(intent);
             //}
 
 
@@ -159,8 +162,8 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
         //fragment.setArguments(bundle);
         //transaction.replace(R.id.container,fragment);
         //transaction.commit();
-        Intent intent=new Intent(TaskActivity.this,TestActivity.class);
-        intent.putExtra("goal",calorie);
+        Intent intent = new Intent(TaskActivity.this, TestActivity.class);
+        intent.putExtra("goal", calorie);
         startActivity(intent);
 
     }
@@ -168,5 +171,54 @@ private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=100;
     @Override
     public void getName(String name) {
 
+    }
+
+    private void check_permission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    GymFragment fragment = new GymFragment();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container, fragment);
+                    transaction.commit();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

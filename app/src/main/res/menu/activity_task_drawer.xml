@@ -5,22 +5,23 @@
         <item
             android:id="@+id/nearby_gym"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="Nearby Gym" />
+            android:title="@string/Nearby_Gym" />
         <item
             android:id="@+id/Watch_Exercises"
             android:icon="@drawable/ic_play_arrow_black_24dp"
-            android:title="Watch Exercise" />
+            android:title="@string/Watch_Exercise" />
         <item
             android:id="@+id/track_progress"
             android:icon="@drawable/ic_trending_up_black_24dp"
-            android:title="Track Progress" />
+            android:title="@string/Track_Progress" />
         <item
             android:id="@+id/get_macros"
             android:icon="@drawable/eat"
-            android:title="Get Macros" />
+            android:title="@string/Get_Macros" />
     </group>
 
-    <item android:title="Log Out"
+    <item
+        android:title=""
         android:id="@+id/log_out">
 
     </item>

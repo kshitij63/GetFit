@@ -27,40 +27,41 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  */
 
 public class AlarmReceiver extends BroadcastReceiver {
-Context context;
-int total;
+    Context context;
+    int total;
     SharedPreferences preferences;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context=context;
-        preferences=context.getSharedPreferences("NotSET",0);
+        this.context = context;
+        preferences = context.getSharedPreferences("NotSET", 0);
 
-        if(ActiveApiClientService.client.isConnected()){
-            Log.e("Jobdispatch","Connected");
+        if (ActiveApiClientService.client.isConnected()) {
+            Log.e("Jobdispatch", "Connected");
 
-            ViewWeekStepCountTask viewWeekStepCountTask=new ViewWeekStepCountTask();
+            ViewWeekStepCountTask viewWeekStepCountTask = new ViewWeekStepCountTask();
             viewWeekStepCountTask.execute();
         }
     }
+
     private void makeNotification(String goal) {
-        NotificationCompat.Builder builder=new NotificationCompat.Builder(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         builder.setContentTitle("Goal Completed");
         builder.setContentText(goal);
         builder.setSmallIcon(R.drawable.dum);
 
-        Intent notificationIntent=new Intent(context,TestActivity.class);
-        notificationIntent.putExtra("intent","fromintent");
-        PendingIntent pendingIntent=PendingIntent.getActivity(context, (int) System.currentTimeMillis(),notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent notificationIntent = new Intent(context, TestActivity.class);
+        notificationIntent.putExtra("intent", "fromintent");
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
-        NotificationManager manager =(NotificationManager)context. getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
-        manager.notify(001,builder.build());
+        manager.notify(001, builder.build());
 
     }
 
     private class ViewWeekStepCountTask extends AsyncTask<Void, Void, Void> {
-
 
 
         protected Void doInBackground(Void... params) {
@@ -75,16 +76,16 @@ int total;
 
             //Toast.makeText(TestActivity.this,total+"total",Toast.LENGTH_SHORT).show();
 
-            if(preferences.getInt("goal",0)<=total){
-                makeNotification("Congratulations!!.You have successfully completed today's goal of burning " +preferences.getInt("goal",0)
-                        +".Keep up the good work see your tomorrow");
-            }
-            else {
-                makeNotification("Sorry!!.You did not completed your goal");
+            if (preferences.getInt("goal", 0) <= total) {
+                makeNotification(context.getResources().getString(R.string.congrat1) + preferences.getInt("goal", 0)
+                        +context.getResources().getString(R.string.congrat2) );
+            } else {
+                makeNotification(context.getResources().getString(R.string.sorry));
 
             }
         }
     }
+
     private void showDataSet(DataSet dataSet) {
         Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
         DateFormat dateFormat = DateFormat.getDateInstance();
@@ -95,10 +96,10 @@ int total;
             Log.e("History", "\tType: " + dp.getDataType().getName());
             Log.e("History", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
             Log.e("History", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            for(Field field : dp.getDataType().getFields()) {
+            for (Field field : dp.getDataType().getFields()) {
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
-                total= (int) (total+Float.valueOf(dp.getValue(field).toString()));
+                total = (int) (total + Float.valueOf(dp.getValue(field).toString()));
             }
 
 

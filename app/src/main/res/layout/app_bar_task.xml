@@ -18,6 +18,7 @@
             android:background="?attr/colorPrimary"
 
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+
         <fragment
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -26,8 +27,6 @@
 
 
     </android.support.design.widget.AppBarLayout>
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>
