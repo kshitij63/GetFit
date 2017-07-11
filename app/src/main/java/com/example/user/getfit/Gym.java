@@ -10,6 +10,14 @@ public class Gym {
     private String name;
     private String vicinity;
     private Boolean status;
+    private String status_string;
+    Gym(String phot_ref, String rating, String name, String vicinity, String status_string) {
+        this.phot_ref = phot_ref;
+        this.name = name;
+        this.rating = rating;
+        this.vicinity = vicinity;
+        this.status_string=status_string;
+    }
 
     Gym(String phot_ref, String rating, String name, String vicinity, Boolean status) {
         this.phot_ref = phot_ref;
@@ -37,5 +45,9 @@ public class Gym {
 
     public String getVicinity() {
         return vicinity;
+    }
+
+    public String getStatus_string() {
+        return status_string;
     }
 }

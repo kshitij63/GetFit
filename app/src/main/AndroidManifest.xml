@@ -29,6 +29,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_api_key" />
+        <provider
+            android:authorities="com.example.user.getfit"
+            android:name=".GymProvider"></provider>
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -38,7 +41,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ActiveApiClientService" />
+        <service android:name=".ActiveApiClientService"
+            android:exported="false"/>
 
         <activity
             android:name=".TaskActivity"
@@ -59,6 +63,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/calorie_widget_info" />
         </receiver>
+
+        <activity android:name=".FavouriteActivity"></activity>
     </application>
 
 </manifest>

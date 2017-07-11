@@ -258,7 +258,7 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
                         LatLng latLng1 = new LatLng(gym_latitude, gym_longitude);
                         map.addMarker(new MarkerOptions().title(gym.getString("name")).position(latLng1).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                     }
-                    recyclerView.setAdapter(new GymAdapter(getContext(), gymArrayList));
+                    recyclerView.setAdapter(new GymAdapter(getContext(), gymArrayList,1008));
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                 } catch (JSONException e) {

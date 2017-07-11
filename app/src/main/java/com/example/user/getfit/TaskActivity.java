@@ -123,7 +123,8 @@ public class TaskActivity extends AppCompatActivity implements NavigationView.On
 
             // Handle the camera action
         } else if (id == R.id.get_macros) {
-
+Intent intent=new Intent(this,FavouriteActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nearby_gym) {
 
             check_permission();
@@ -191,6 +192,13 @@ public class TaskActivity extends AppCompatActivity implements NavigationView.On
             // result of the request.
 
         }
+        else {
+            GymFragment fragment = new GymFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, fragment);
+            transaction.commit();
+
+        }
     }
 
     @Override
@@ -202,15 +210,16 @@ public class TaskActivity extends AppCompatActivity implements NavigationView.On
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    GymFragment fragment = new GymFragment();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container, fragment);
+                    transaction.commit();
+
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
                 } else {
 
-                    GymFragment fragment = new GymFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.container, fragment);
-                    transaction.commit();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }

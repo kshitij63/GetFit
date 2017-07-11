@@ -8,7 +8,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="map_api_key">Your_String_Here</string>
+    <string name="map_api_key">AIzaSyDoROcHkJdyPh72hRicA1RYP4F77CDizqo</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="Dont_Want_to_Login">Dont Want to Login?</string>
@@ -16,7 +16,7 @@
     <string name="Nearby_Gym">Nearby Gym</string>
     <string name="Watch_Exercise">Watch Exercise</string>
     <string name="Track_Progress">Track Progress</string>
-    <string name="Get_Macros">Get Macros</string>
+    <string name="Get_Macros">Favourites</string>
     <string name="GOAL">GOAL:</string>
     <string name="Log_Out">Log Out</string>
     <string name="LEFT">LEFT:</string>
