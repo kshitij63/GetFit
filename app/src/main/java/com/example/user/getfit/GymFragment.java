@@ -96,11 +96,6 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
 
                     }
                 });
-                //if(!progressDialog.isShowing()){
-                //  LatLng latLng=new LatLng(current_latitude,current_longitude);
-                //googleMap.addMarker(new MarkerOptions().position(latLng).title("you"));
-                // googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
-                //}
 
 
             }

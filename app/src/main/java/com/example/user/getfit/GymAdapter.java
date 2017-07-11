@@ -100,7 +100,7 @@ public class GymAdapter extends RecyclerView.Adapter<GymAdapter.GymHolder> {
                         public void onClick(DialogInterface dialog, int which) {
                             Uri uri = context.getContentResolver().insert(GymContract.SavedGyms.CONTENT_URI, values);
                             if (!uri.toString().equals("")) {
-                                Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, context.getResources().getString(R.string.COMPLETED), Toast.LENGTH_SHORT).show();
                             }
                             Log.e("Uri entry", GymContract.SavedGyms.CONTENT_URI.toString());
                         }
@@ -144,7 +144,7 @@ public class GymAdapter extends RecyclerView.Adapter<GymAdapter.GymHolder> {
 
     public void setImage(String ref, ImageView view) {
         if (ref != context.getResources().getString(R.string.NA)) {
-            String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + ref + "&key=" + context.getResources().getString(R.string.map_api_key);
+            String url = context.getResources().getString(R.string.photo1) + ref + context.getResources().getString(R.string.photo2) + context.getResources().getString(R.string.map_api_key);
             Picasso.with(context).load(url).into(view);
         }
     }

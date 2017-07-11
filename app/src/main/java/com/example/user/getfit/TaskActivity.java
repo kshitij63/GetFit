@@ -164,7 +164,7 @@ public class TaskActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void YourCalorie(String calorie) {
         if (calorie.equals("")) {
-            Toast.makeText(this, "Calorie cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.empty), Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(TaskActivity.this, TestActivity.class);
             intent.putExtra("goal", calorie);

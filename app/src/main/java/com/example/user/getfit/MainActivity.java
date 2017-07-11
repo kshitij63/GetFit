@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    Toast.makeText(MainActivity.this, "Welcome " + firebaseAuth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.Welcome) + firebaseAuth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, TaskActivity.class);
                     intent.putExtra("name", firebaseAuth.getCurrentUser().getDisplayName());
                     intent.putExtra("email", firebaseAuth.getCurrentUser().getEmail());
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
 
                         } else {
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.makeText(MainActivity.this, getResources().getString(R.string.Authentication_failed),
                                     Toast.LENGTH_SHORT).show();
 
                         }

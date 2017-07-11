@@ -134,14 +134,14 @@ public class ExerciseDetailActivity extends YouTubeBaseActivity {
                 }
 
             }
-            //Toast.makeText(ExerciseDetailActivity.this,id_ex.size() +"ex",Toast.LENGTH_SHORT).show();
+
 
             for (int i = 0; i < id_ex.size(); i++) {
-                String Thumurl = "http://img.youtube.com/vi/" + id_ex.get(i) + "/0.jpg";
+                String Thumurl = getResources().getString(R.string.youtube1) + id_ex.get(i) + getResources().getString(R.string.youtube2);
                 BodyPart part = new BodyPart(Thumurl);
                 parts.add(part);
             }
-            //  Toast.makeText(this,parts.size() +" parts",Toast.LENGTH_SHORT).show();
+
 
             listView.setAdapter(new BodyPartAdapter(this, parts));
 

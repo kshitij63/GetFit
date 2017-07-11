@@ -269,19 +269,11 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onDataPoint(DataPoint dataPoint) {
         ContentValues values = new ContentValues();
 
-        Toast.makeText(this, "data point", Toast.LENGTH_SHORT).show();
+
         Log.e("GoogleFit", "ondata");
 
         for (final Field field : dataPoint.getDataType().getFields()) {
             final Value value = dataPoint.getValue(field);
-            Handler handler = new Handler();
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "Field: " + field.getName() + " Value: " + value, Toast.LENGTH_SHORT).show();
-
-                }
-            });
 
             Log.e("google", "Field: " + field.getName() + " Value: " + value);
           }
@@ -367,11 +359,11 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         @Override
         protected void onPostExecute(Void aVoid) {
             dialog.hide();
-            Toast.makeText(TestActivity.this, total + "total", Toast.LENGTH_SHORT).show();
+
 
             if (preferences.getInt("goal", 0) <= total) {
                 left.setText("0");
-                progress.setBottomText("COMPLETED");
+                progress.setBottomText(getResources().getString(R.string.COMPLETED));
                 progress.setProgress(100);
             } else {
             int p = ((total * 100) / preferences.getInt("goal", 0));
