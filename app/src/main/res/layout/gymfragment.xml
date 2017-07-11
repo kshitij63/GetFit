@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:id="@+id/fab_Search"
+        android:contentDescription="@string/SearchPlaces"
         android:layout_margin="16dp"
         android:src="@drawable/ic_search_black_24dp" />
 

@@ -67,9 +67,9 @@ public class GymAdapter extends RecyclerView.Adapter<GymAdapter.GymHolder> {
                 }
 
             } else {
-                holder.status.setText("N/A");
+                holder.status.setText(context.getResources().getString(R.string.NA));
 
-                values.put(GymContract.SavedGyms.STATUS, "N/A");
+                values.put(GymContract.SavedGyms.STATUS, context.getResources().getString(R.string.NA));
             }
         } else {
             holder.status.setText(gymArrayList.get(position).getStatus_string());
@@ -86,7 +86,7 @@ public class GymAdapter extends RecyclerView.Adapter<GymAdapter.GymHolder> {
             values.put(GymContract.SavedGyms.RATING, gymArrayList.get(position).getRating());
 
 
-        if (!gymArrayList.get(position).getRating().equals("N/A")) {
+        if (!gymArrayList.get(position).getRating().equals(context.getResources().getString(R.string.NA))) {
             Float rate = Float.valueOf(gymArrayList.get(position).getRating());
 
             holder.bar.setRating(rate);
@@ -95,7 +95,7 @@ public class GymAdapter extends RecyclerView.Adapter<GymAdapter.GymHolder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new AlertDialog.Builder(context).setMessage("Add to favourites?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(context).setMessage(context.getResources().getString(R.string.Add_to_favourites)).setPositiveButton(context.getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Uri uri = context.getContentResolver().insert(GymContract.SavedGyms.CONTENT_URI, values);
@@ -104,7 +104,7 @@ public class GymAdapter extends RecyclerView.Adapter<GymAdapter.GymHolder> {
                             }
                             Log.e("Uri entry", GymContract.SavedGyms.CONTENT_URI.toString());
                         }
-                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    }).setNegativeButton(context.getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -143,7 +143,7 @@ public class GymAdapter extends RecyclerView.Adapter<GymAdapter.GymHolder> {
     }
 
     public void setImage(String ref, ImageView view) {
-        if (ref != "N/A") {
+        if (ref != context.getResources().getString(R.string.NA)) {
             String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + ref + "&key=" + context.getResources().getString(R.string.map_api_key);
             Picasso.with(context).load(url).into(view);
         }

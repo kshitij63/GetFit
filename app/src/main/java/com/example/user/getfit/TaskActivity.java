@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.squareup.picasso.Picasso;
@@ -116,6 +117,9 @@ public class TaskActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.Watch_Exercises) {
+            android.app.FragmentTransaction mtra = getFragmentManager().beginTransaction();
+            mtra.hide(autocompleteFragment);
+            mtra.commit();
             ExrecisePartFragment fragment = new ExrecisePartFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.container, fragment);
@@ -123,7 +127,10 @@ public class TaskActivity extends AppCompatActivity implements NavigationView.On
 
             // Handle the camera action
         } else if (id == R.id.get_macros) {
-Intent intent=new Intent(this,FavouriteActivity.class);
+            android.app.FragmentTransaction mtra = getFragmentManager().beginTransaction();
+            mtra.hide(autocompleteFragment);
+            mtra.commit();
+            Intent intent = new Intent(this, FavouriteActivity.class);
             startActivity(intent);
         } else if (id == R.id.nearby_gym) {
 
@@ -156,17 +163,13 @@ Intent intent=new Intent(this,FavouriteActivity.class);
 
     @Override
     public void YourCalorie(String calorie) {
-        //ProgressDetailsFragment fragment=new ProgressDetailsFragment();
-        //FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
-        //Bundle bundle=new Bundle();
-        //bundle.putString("goal",calorie);
-        //fragment.setArguments(bundle);
-        //transaction.replace(R.id.container,fragment);
-        //transaction.commit();
-        Intent intent = new Intent(TaskActivity.this, TestActivity.class);
-        intent.putExtra("goal", calorie);
-        startActivity(intent);
-
+        if (calorie.equals("")) {
+            Toast.makeText(this, "Calorie cannot be empty", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(TaskActivity.this, TestActivity.class);
+            intent.putExtra("goal", calorie);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -191,8 +194,7 @@ Intent intent=new Intent(this,FavouriteActivity.class);
             // app-defined int constant. The callback method gets the
             // result of the request.
 
-        }
-        else {
+        } else {
             GymFragment fragment = new GymFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.container, fragment);

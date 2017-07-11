@@ -84,7 +84,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
     private ResultCallback<ListSubscriptionsResult> mListSubscriptionsResultCallback;
     private static final int REQUEST_OAUTH = 1;
     private static final String AUTH_PENDING = "auth_state_pending";
-    TestStepHelper helper;
+
     SQLiteDatabase db;
     private boolean authInProgress = false;
 
@@ -92,7 +92,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        helper = new TestStepHelper(this);
+
         dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setTitle(getResources().getString(R.string.update));
@@ -113,9 +113,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         goal.setText(String.valueOf(preferences.getInt("goal", 0)));
 
 
-        //progress.setProgress(50);
 
-        db = helper.getWritableDatabase();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
@@ -276,8 +274,6 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         for (final Field field : dataPoint.getDataType().getFields()) {
             final Value value = dataPoint.getValue(field);
-            values.put("num_step", value.toString());
-            db.insert("step", null, values);
             Handler handler = new Handler();
             handler.post(new Runnable() {
                 @Override

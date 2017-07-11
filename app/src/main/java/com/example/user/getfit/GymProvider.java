@@ -17,15 +17,14 @@ import android.widget.Toast;
  */
 
 public class GymProvider extends ContentProvider {
-   UriMatcher matcher;
     GymHelper helper;
-    private static final int GYM=100;
-    private static final int GYM_WITH_ID=101;
+    private static final int GYM = 100;
+    private static final int GYM_WITH_ID = 101;
 
-    public UriMatcher getUriMatcher(){
-        UriMatcher uriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(GymContract.AUTHORITY,GymContract.SavedGyms.TABLE_NAME,GYM);
-        uriMatcher.addURI(GymContract.AUTHORITY,GymContract.SavedGyms.TABLE_NAME+"/#",GYM_WITH_ID);
+    public UriMatcher getUriMatcher() {
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(GymContract.AUTHORITY, GymContract.SavedGyms.TABLE_NAME, GYM);
+        uriMatcher.addURI(GymContract.AUTHORITY, GymContract.SavedGyms.TABLE_NAME + "/#", GYM_WITH_ID);
         return uriMatcher;
 
     }
@@ -33,29 +32,28 @@ public class GymProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        helper=new GymHelper(getContext());
+        helper = new GymHelper(getContext());
         return false;
     }
 
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        SQLiteDatabase db=helper.getReadableDatabase();
-        int vari=getUriMatcher().match(uri);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        int vari = getUriMatcher().match(uri);
         Cursor cr = null;
-        if(vari==GYM) {
-            cr=db.query(GymContract.SavedGyms.TABLE_NAME,
+        if (vari == GYM) {
+            cr = db.query(GymContract.SavedGyms.TABLE_NAME,
                     projection,
                     selection,
                     selectionArgs,
                     null,
                     null,
                     sortOrder);
+        } else {
+            Log.e("Gym Provider", "Invalid Request");
         }
-        else{
-            Log.e("Gym Provider","Invalid Request");
-        }
-        cr.setNotificationUri(getContext().getContentResolver(),uri);
+        cr.setNotificationUri(getContext().getContentResolver(), uri);
 
 
         return cr;
@@ -70,22 +68,19 @@ public class GymProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        SQLiteDatabase db=helper.getWritableDatabase();
-        Uri mUri=null;
-        if(getUriMatcher().match(uri)==GYM){
-        long id=db.insert(GymContract.SavedGyms.TABLE_NAME,null,values);
-            if(id>0)
-                mUri= ContentUris.withAppendedId(GymContract.SavedGyms.CONTENT_URI,id);
-            else{
-                Toast.makeText(getContext(),"error inserting",Toast.LENGTH_SHORT).show();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Uri mUri = null;
+        if (getUriMatcher().match(uri) == GYM) {
+            long id = db.insert(GymContract.SavedGyms.TABLE_NAME, null, values);
+            if (id > 0)
+                mUri = ContentUris.withAppendedId(GymContract.SavedGyms.CONTENT_URI, id);
+            else {
+                Toast.makeText(getContext(), "Error Add Failed", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Log.e("Gym Provider", "Invalid Entry");
         }
-        else {
-            Log.e("Gym Provider","Invalid Entry");
-        }
-        getContext().getContentResolver().notifyChange(uri,null);
-
-
+        getContext().getContentResolver().notifyChange(uri, null);
 
 
         return mUri;

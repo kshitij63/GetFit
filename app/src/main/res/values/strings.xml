@@ -38,5 +38,13 @@
     <string name="congrat2">.Keep up the good work see your tomorrow</string>
     <string name="sorry">Sorry!!.You did not completed your goal</string>
     <string name="com">Goal Completed</string>
+    <string name="YOU_BURNT">YOU BURNT </string>
     <string name="update">Updating progress..</string>
+    <string name="CALORIES">CALORIES</string>
+    <string name="NA">N/A</string>
+    <string name="Add_to_favourites">Add to favourites?</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="Logging_In">Logging In....</string>
+    <string name="SearchPlaces">Search Places</string>
 </resources>

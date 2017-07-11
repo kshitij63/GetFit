@@ -86,9 +86,6 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Toast.makeText(getContext(), "connected", Toast.LENGTH_SHORT).show();
-        //SensorRequest request=new SensorRequest.Builder().setDataType(DataType.TYPE_STEP_COUNT_DELTA).setSamplingRate(1, java.util.concurrent.TimeUnit.SECONDS).build();
-        //Toast.makeText(getContext(),"connected sus",Toast.LENGTH_SHORT).show();
         DataSourcesRequest dataSourceRequest = new DataSourcesRequest.Builder()
                 .setDataTypes(DataType.TYPE_STEP_COUNT_DELTA)
                 .setDataSourceTypes(DataSource.TYPE_RAW)
@@ -131,7 +128,6 @@ public class ProgressDetailsFragment extends Fragment implements GoogleApiClient
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        Toast.makeText(getContext(), "connected faied", Toast.LENGTH_SHORT).show();
         if (!authInProgress) {
             try {
                 authInProgress = false;

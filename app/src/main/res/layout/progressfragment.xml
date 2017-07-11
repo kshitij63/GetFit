@@ -39,7 +39,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:text=""
+            android:text="@string/GET_STarted"
             android:layout_gravity="center"
             android:textColor="#FFF"
             android:id="@+id/button_2"

@@ -19,7 +19,7 @@ public class CalorieWidget extends AppWidgetProvider {
         CharSequence widgetText = String.valueOf(preferences.getInt("total", 0));
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.calorie_widget);
-        views.setTextViewText(R.id.appwidget_text, "YOU BURNT " + widgetText + "CALORIES");
+        views.setTextViewText(R.id.appwidget_text, context.getResources().getString(R.string.YOU_BURNT) + widgetText +context.getResources().getString(R.string.CALORIES));
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

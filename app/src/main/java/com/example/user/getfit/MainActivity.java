@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         setInitialUISetup();
         dialog = new ProgressDialog(this);
-        dialog.setTitle("Logging In....");
+        dialog.setTitle(getResources().getString(R.string.Logging_In));
         dialog.setIndeterminate(true);
         callbackManager = CallbackManager.Factory.create();
         facebook_login = (LoginButton) findViewById(R.id.facebook_login);
@@ -98,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TaskActivity.class);
-//                intent.putExtra("name",firebaseAuth.getCurrentUser().getDisplayName());
-                //              intent.putExtra("email",firebaseAuth.getCurrentUser().getEmail());
-                //            intent.putExtra("photo",firebaseAuth.getCurrentUser().getPhotoUrl());
                 startActivity(intent);
 
             }
@@ -115,14 +112,13 @@ public class MainActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_LONG).show();
+
                     }
                 }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //          Toast.makeText(MainActivity.this,"result3",Toast.LENGTH_LONG).show();
 
                 signIn();
             }
@@ -140,13 +136,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
         dialog.show();
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Toast.makeText(MainActivity.this,"result",Toast.LENGTH_LONG).show();
+
                 dialog.show();
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
 
@@ -158,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        //Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -167,19 +161,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             dialog.hide();
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            //      Toast.makeText(MainActivity.this,"welcome" +user.getDisplayName(),Toast.LENGTH_SHORT).show();
-                            //          Intent intent=new Intent(MainActivity.this,TaskActivity.class);
-                            //        startActivity(intent);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
+
                         }
 
 
@@ -210,14 +197,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
+
         mAuth.addAuthStateListener(authStateListener);
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
-        //Log.d(TAG, "handleFacebookAccessToken:" + token);
+
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -225,21 +211,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithCredential:success");
                             dialog.hide();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //    Toast.makeText(MainActivity.this,"Facebook" +user.getDisplayName(),Toast.LENGTH_SHORT).show();
-                            //              Intent intent=new Intent(MainActivity.this,TaskActivity.class);
-                            //            startActivity(intent);
-                            //updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            //                     Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
+                       }
 
                         // ...
                     }

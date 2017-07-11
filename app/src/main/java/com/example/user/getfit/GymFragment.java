@@ -78,12 +78,7 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
         setupGoogleApiClient();
         actionButton = (FloatingActionButton) view.findViewById(R.id.fab_Search);
         recyclerView = (RecyclerView) view.findViewById(R.id.gymRecycle);
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setTitle("Getting current location..");
-        progressDialog.show();
         mapFragment = (MapView) view.findViewById(R.id.mapfragment);
-
         mapFragment.onCreate(savedInstanceState);
         mapFragment.onResume();
         try {
@@ -148,7 +143,6 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        progressDialog.dismiss();
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(30000);
         locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
@@ -167,20 +161,18 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     @Override
     public void onConnectionSuspended(int i) {
-        progressDialog.dismiss();
-        Toast.makeText(getContext(), "suspendede", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        progressDialog.dismiss();
-        Toast.makeText(getContext(), "failed" + connectionResult.getErrorMessage(), Toast.LENGTH_SHORT).show();
+
+
 
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        progressDialog.dismiss();
         current_latitude = location.getLatitude();
         current_longitude = location.getLongitude();
         LatLng latLng = new LatLng(current_latitude, current_longitude);
@@ -240,13 +232,13 @@ public class GymFragment extends Fragment implements GoogleApiClient.ConnectionC
                             JSONObject object = photo.getJSONObject(0);
                             photo_ref = object.getString("photo_reference");
                         } else {
-                            photo_ref = "N/A";
+                            photo_ref = getActivity().getResources().getString(R.string.NA);
                         }
                         String vicinity = gym.getString("vicinity");
                         if (gym.has("rating")) {
                             rate = String.valueOf(gym.getDouble("rating"));
                         } else {
-                            rate = "N/A";
+                            rate = getActivity().getResources().getString(R.string.NA);
                         }
 
                         JSONObject geometry = gym.getJSONObject("geometry");
